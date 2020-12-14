@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>直播线索信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+<div class="container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">品牌列表</div>
+                <div class="layui-card-body">
+                    <table id="demo" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="/layui/layui.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script>
+        layui.use(['table','upload'], function(){
+            var table = layui.table;
+            //第一个实例
+            table.render({
+                elem: '#demo'
+                ,height: 600
+                ,url: '/brandList'
+                // ,page: true //开启分页
+                ,title: '品牌列表'
+                // ,toolbar: '#toolbarDemo'  //开启头部工具栏，并为其绑定左侧模板
+                ,cols: [[ //表头
+                    {field: 'brand_name', title: '品牌名称', width:150, event: 'clos'}
+                    ,{field: 'trader_count', title: '经销商数量', width:130, event: 'clos'}
+                    ,{field: 'live_trader_count', title: '直播经销商个数', width:140, event:'clos'}
+                    ,{field: 'update_time', title: '更新时间', width: 110, event: 'clos'}
+                    ,{field: 'username', title: '用户名', width: 110, event:'cols'}
+                    ,{field: 'password', title: '密码', width: 110, event:'cols'}
+                ]]
+                ,done: function(res,curr,count){
+                    $('td').css({'cursor':'pointer'}); //设置成指针放在表格上换成手指
+                    $('table').width('100%');
+                }
+            });
+            table.on('row(test)',function(obj){
+                // obj.stylesheet = 'color:red';
+                var data = obj.data;
+                layer.open({
+                    type: 2
+                    ,title: '修改信息'
+                    ,content: 'data_form.html'
+                    // ,maxmin: true
+                    ,area: ['500px', '450px']
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        let config_name = $(layero).find('iframe')[0].contentWindow.brand_name.value;
+                        let url = $(layero).find('iframe')[0].contentWindow.trader_count.value;
+                        let metadata = $(layero).find('iframe')[0].contentWindow.username.value;
+                        let live_trade_count = $(layero).find('iframe')[0].contentWindow.live_trader_count.value;
+                        let update_time = $(layero).find('iframe')[0].contentWindow.update_time.value;
+                        let password = $(layero).find('iframe')[0].contentWindow.password.value;
+                        //同步数据表格中的数据
+                        console.log(config_name);
+                        console.log(url);
+                        obj.update({
+                            brand_name:config_name,
+                            trader_count:url,
+                            username:metadata,
+                            update_time: update_time,
+                            live_trade_count: live_trade_count,
+                            password: password
+                        })
+                        // $.ajax({
+                        //     url:'/update_brand',
+                        //     type:"post",
+                        //     contentType:"application/json;charset=utf-8",
+                        //     dataType:'json',
+                        //     data:{
+                        //         brand_name:config_name,
+                        //         url:url,
+                        //         metadata:metadata
+                        //     },
+                        //     success:function(res){
+                        //         layer.msg('操作成功');
+                        //     },
+                        //     error:function(res){
+                        //         layer.msg('操作失败，稍后再试！');
+                        //     }
+                        // })
+                        layer.close(index);
+
+                    }
+                    ,success: function(layero, index){
+
+                        // 方式一  其实就是获取的 子页面的 div
+                        var div = layero.find('iframe').contents().find('#useradmin');  // div.html() div里面的内容,不包含当前这个div
+
+                        // 方式二
+                        var body = layer.getChildFrame('body', index);  // body.html() body里面的内容
+
+
+                        /* ---- 附加内容 看看就好  Begin ---- */
+                        var iframeWindow = window['layui-layer-iframe'+ index]   // 方式一： 得到iframe页的窗口对象
+                        // var iframeWindow = window[layero.find('iframe')[0]['name']];   // 方式二： 得到iframe页的窗口对象
+                        /* ---- 附加内容 看看就好  End ---- */
+
+                        // 测试 ：
+                        body.find("#brand_name").val(data.brand_name);  // 方式一
+                        body.find("#trader_count").val(data.trader_count)
+                        body.find("#username").val(data.username)
+                        body.find("#live_trader_count").val(data.live_trader_count);
+                        body.find("#update_time").val(data.update_time);
+                        body.find("#password").val(data.password);
+                        // div.find("#username").val("admin");  // 方式二
+                    }
+                });
+            })
+        });
+
+    </script>
+
+</div>
+</body>
+</html>

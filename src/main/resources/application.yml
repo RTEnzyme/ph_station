@@ -1,0 +1,23 @@
+server:
+  port: 8089
+  tomcat:
+    uri-encoding: utf-8
+spring:
+  # 配置可以直接访问的静态文件目录
+  resources:
+    static-locations: classpath:/static/,classpath:/templates/,classpath:/static/img/,classpath:/static/css/,classpath:/static/js/
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.93.1.155:3306/dy_live_new?useSSL=false&characterEncoding=utf-8 #47数据库新建schema的Url
+    username: root #47mysql username
+    password: Dyanalysis@1a2b3c #47mysql password
+    type: com.alibaba.druid.pool.DruidDataSource
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .htmlvghfgfhfgh
+#    mode: HTML5
+#    encoding: UTF-8
+#    cache: false
+#    enabled: true
+#    servlet:
+#      content-type: text/html
