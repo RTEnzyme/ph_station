@@ -16,6 +16,16 @@
             <div class="layui-card">
                 <div class="layui-card-header">品牌列表</div>
                 <div class="layui-card-body">
+                    <div class="demoTable">
+                        <select name="city" onchange="getSelectValue(this);">
+                            <option value="name">用户名</option>
+                            <option value="id">id</option>>
+                        </select>
+                        <div class="layui-inline">
+                            <input class="layui-input" name="productId" id="send_name" autocomplete="off">
+                        </div>
+                        <button class="layui-btn" data-type="reload" id="do_search">搜索</button>
+                    </div>
                     <table id="demo" lay-filter="test"></table>
                 </div>
             </div>
@@ -25,12 +35,20 @@
     <script src="/layui/layui.js"></script>
     <script src="/js/jquery.min.js"></script>
     <script>
+        var sValue = 'name';
+        function getSelectValue(obj) {
+            sValue = obj.options[obj.options.selectedIndex].value; //这是取值
+            // var sText = obj.options[obj.options.selectedIndex].innerHTML; //这是取文本内容
+            // document.getElementById("selectValue").innerHTML = sText + "，他的值为：" + sValue; //测试输出
+        };
         layui.use(['table','upload'], function(){
             var table = layui.table;
             //第一个实例
             table.render({
-                elem: '#demo'
-                ,height: 600
+                id:'test'
+                ,elem: '#demo'
+                ,page: 'true'
+                ,height: 500
                 ,url: '/brandList'
                 // ,page: true //开启分页
                 ,title: 'KOL列表'
@@ -48,6 +66,41 @@
                     $('table').width('100%');
                 }
             });
+            // 执行搜索，表格重载
+            $('#do_search').on('click', function () {
+                    // 搜索条件
+                    let send_name = $('#send_name').val();
+                    console.log(sValue)
+                    // let select = $('#select').val();
+                    // var send_data = $('#send_data').val();
+                    if(sValue === 'name'){
+                        table.reload('test', {
+                            method: 'post'
+                            , where: {
+                                // 'csrfmiddlewaretoken': token,
+                                'kol_name': send_name,
+                                // 'send_data': send_data,
+                            }
+                            , page: {
+                                curr: 1
+                            }
+                        },'data')
+                    }else{
+                        table.reload('test', {
+                            method: 'post'
+                            , where: {
+                                // 'csrfmiddlewaretoken': token,
+                                'douyinId': send_name,
+                                'kol_name': "",
+                                // 'send_data': send_data,
+                            }
+                            , page: {
+                                curr: 1
+                            }
+                        },'data')
+                    }
+                }
+            );
             table.on('row(test)',function(obj){
                 // obj.stylesheet = 'color:red';
                 var data = obj.data;

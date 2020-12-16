@@ -6,6 +6,7 @@ import com.lemon.admin.cofjus.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,9 +37,18 @@ public class MainController {
     }
     @RequestMapping("/brandList")
     @ResponseBody
-    public String brandList(){
-        List<User> brands = userRepository.findAll();
+    public String brandList(Integer limit,Integer page,String kol_name,String douyinId){
+        List<User> brands;
         List<JSONObject> jsonObjectList = new ArrayList<>();
+        if(kol_name != null && !kol_name.equals("")){
+//             System.out.println(kol_name);
+//             System.out.println(douyinId);
+            brands = userRepository.findUsersByKolName(kol_name);
+        }else if(douyinId != null ){
+            brands = userRepository.findUsersByUniqueId(douyinId);
+        }else {
+            brands = userRepository.findAll();
+        }
         for(User brand:brands){
             //将数据加入到json中
             JSONObject json = new JSONObject();;
@@ -80,6 +90,12 @@ public class MainController {
             // 合作配合度（高中低），最后标注人（不可改)
 
             jsonObjectList.add(json);
+        }
+        int size=jsonObjectList.size();
+        if(page*limit<=size){
+            jsonObjectList=jsonObjectList.subList((page-1)*limit, page*limit);
+        }else{
+            jsonObjectList=jsonObjectList.subList((page-1)*limit, size);
         }
         //生成Layui.table需要的数据格式
         JSONObject jsonContainer = new JSONObject();

@@ -3,6 +3,8 @@ package com.lemon.admin.cofjus.controller;
 import com.lemon.admin.cofjus.entity.Operator;
 import com.lemon.admin.cofjus.repositories.OperatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +20,9 @@ public class MySubmitController {
     @ResponseBody
     @RequestMapping(value = "/changeInformation", method = RequestMethod.POST)
     public int mySubmit(@RequestBody Map<String,String> reqMap) {
-
-        Operator agent = operatorRepository.findByUserName("admin");
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User usr = (User)principal;
+        Operator agent = operatorRepository.findByUserName(usr.getUsername());
 //        String phone = reqMap.get("phone");
         String password =encodePassword(reqMap.get("password"));
 //        String mailbox = reqMap.get("mailbox");

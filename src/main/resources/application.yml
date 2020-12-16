@@ -1,5 +1,5 @@
 server:
-  port: 8089
+  port: 8090
   tomcat:
     uri-encoding: utf-8
 spring:
@@ -12,7 +12,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://47.111.182.11:3306/kol_data?useSSL=false&characterEncoding=utf-8 #47数据库新建schema的Url
     username: root #47mysql username
-    password: #47mysql password
+    password: Dyanalysis@1a2b3c #47mysql password
     type: com.alibaba.druid.pool.DruidDataSource
 
 #  thymeleaf:
