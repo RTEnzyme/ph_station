@@ -8,11 +8,11 @@
         <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.hhu</groupId>
-    <artifactId>bigdatasys</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>bigdatasys</name>
-    <description>Demo project for Spring Boot</description>
+    <groupId>cn.ledi</groupId>
+    <artifactId>KOL-Annotation</artifactId>
+    <version>0.1</version>
+    <name>KOLAnnotation</name>
+    <description>KOL Annotation Web App </description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,17 +32,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
