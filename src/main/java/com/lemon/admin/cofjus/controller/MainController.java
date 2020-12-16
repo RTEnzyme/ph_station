@@ -47,8 +47,9 @@ public class MainController {
         }else if(douyinId != null ){
             brands = userRepository.findUsersByUniqueId(douyinId);
         }else {
-            brands = userRepository.findAll();
+            brands = userRepository.findAll().subList(0,100);
         }
+
         for(User brand:brands){
             //将数据加入到json中
             JSONObject json = new JSONObject();;
@@ -80,14 +81,56 @@ public class MainController {
                 json.put("price","");
             }
 
+            // 过往合作价格 1-20s（文本框，只能填数字）
             if(brand.getBeforePrice()!=null) {
                 json.put("beforePrice", brand.getBeforePrice());
             }else{
                 json.put("beforePrice","");
             }
 
-            // 标注选单一（文本框+下拉），标注选单二，标注选单三，过往合作价格（可改），
-            // 合作配合度（高中低），最后标注人（不可改)
+
+            // 过往合作价格 20-60（文本框，只能填数字）
+            if(brand.getBeforePrice2()!=null) {
+                json.put("beforePrice2", brand.getBeforePrice2());
+            }else{
+                json.put("beforePrice2","");
+            }
+
+            // 标签1（文本框+下拉菜单），标签2（文本框+下拉菜单），标签3（文本框+下拉菜单）
+            // 标签1，2，3的下拉菜单来自 lable表中的50个标签
+
+            if(brand.getSelectLabel1()!=null) {
+                json.put("Label1", brand.getSelectLabel1());
+            }else{
+                json.put("Label1","");
+            }
+
+            if(brand.getSelectLabel2()!=null) {
+                json.put("Label2", brand.getSelectLabel2());
+            }else{
+                json.put("Label2","");
+            }
+
+            if(brand.getSelectLabel3()!=null) {
+                json.put("Label3", brand.getSelectLabel3());
+            }else{
+                json.put("Label3","");
+            }
+
+            if(brand.getCooperateDegree()!=null) {
+                json.put("CooperateDegree", brand.getCooperateDegree());
+            }else{
+                json.put("CooperateDegree","");
+            }
+            // 合作配合度（高/中/低 下拉菜单）
+
+            if(brand.getLastLabelId()!=null) {
+                json.put("LastLabelId", brand.getLastLabelId());
+            }else{
+                json.put("LastLabelId","");
+            }
+
+            // 最后标注人（不可改)
 
             jsonObjectList.add(json);
         }

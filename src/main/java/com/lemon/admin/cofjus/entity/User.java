@@ -1,11 +1,13 @@
 package com.lemon.admin.cofjus.entity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user", schema = "kol_data")
 public class User {
     private int id;
     private String uid;
@@ -17,10 +19,16 @@ public class User {
     private Integer expectedPlayNum;
     private String avatarUrl;
     private String starLabel;
+    private String selectLabel1;
+    private String selectLabel2;
+    private String selectLabel3;
     private String beforePrice;
-    private Integer cooperateDegree;
+    private String cooperateDegree;
+    private Integer lastLabelId;
     private Timestamp lastLabelTime;
+    private Integer preLabelId;
     private Timestamp preLabelTime;
+    private String beforePrice2;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -123,6 +131,36 @@ public class User {
     }
 
     @Basic
+    @Column(name = "select_label1", nullable = true, length = 32)
+    public String getSelectLabel1() {
+        return selectLabel1;
+    }
+
+    public void setSelectLabel1(String selectLabel1) {
+        this.selectLabel1 = selectLabel1;
+    }
+
+    @Basic
+    @Column(name = "select_label2", nullable = true, length = 32)
+    public String getSelectLabel2() {
+        return selectLabel2;
+    }
+
+    public void setSelectLabel2(String selectLabel2) {
+        this.selectLabel2 = selectLabel2;
+    }
+
+    @Basic
+    @Column(name = "select_label3", nullable = true, length = 32)
+    public String getSelectLabel3() {
+        return selectLabel3;
+    }
+
+    public void setSelectLabel3(String selectLabel3) {
+        this.selectLabel3 = selectLabel3;
+    }
+
+    @Basic
     @Column(name = "before_price", nullable = true, length = 10)
     public String getBeforePrice() {
         return beforePrice;
@@ -133,13 +171,23 @@ public class User {
     }
 
     @Basic
-    @Column(name = "cooperate_degree", nullable = true)
-    public Integer getCooperateDegree() {
+    @Column(name = "cooperate_degree", nullable = true, length = 8)
+    public String getCooperateDegree() {
         return cooperateDegree;
     }
 
-    public void setCooperateDegree(Integer cooperateDegree) {
+    public void setCooperateDegree(String cooperateDegree) {
         this.cooperateDegree = cooperateDegree;
+    }
+
+    @Basic
+    @Column(name = "last_label_id", nullable = true)
+    public Integer getLastLabelId() {
+        return lastLabelId;
+    }
+
+    public void setLastLabelId(Integer lastLabelId) {
+        this.lastLabelId = lastLabelId;
     }
 
     @Basic
@@ -153,6 +201,16 @@ public class User {
     }
 
     @Basic
+    @Column(name = "pre_label_id", nullable = true)
+    public Integer getPreLabelId() {
+        return preLabelId;
+    }
+
+    public void setPreLabelId(Integer preLabelId) {
+        this.preLabelId = preLabelId;
+    }
+
+    @Basic
     @Column(name = "pre_label_time", nullable = true)
     public Timestamp getPreLabelTime() {
         return preLabelTime;
@@ -160,6 +218,16 @@ public class User {
 
     public void setPreLabelTime(Timestamp preLabelTime) {
         this.preLabelTime = preLabelTime;
+    }
+
+    @Basic
+    @Column(name = "before_price_2", nullable = true, length = 10)
+    public String getBeforePrice2() {
+        return beforePrice2;
+    }
+
+    public void setBeforePrice2(String beforePrice2) {
+        this.beforePrice2 = beforePrice2;
     }
 
     @Override
@@ -177,14 +245,20 @@ public class User {
                 Objects.equals(expectedPlayNum, user.expectedPlayNum) &&
                 Objects.equals(avatarUrl, user.avatarUrl) &&
                 Objects.equals(starLabel, user.starLabel) &&
+                Objects.equals(selectLabel1, user.selectLabel1) &&
+                Objects.equals(selectLabel2, user.selectLabel2) &&
+                Objects.equals(selectLabel3, user.selectLabel3) &&
                 Objects.equals(beforePrice, user.beforePrice) &&
                 Objects.equals(cooperateDegree, user.cooperateDegree) &&
+                Objects.equals(lastLabelId, user.lastLabelId) &&
                 Objects.equals(lastLabelTime, user.lastLabelTime) &&
-                Objects.equals(preLabelTime, user.preLabelTime);
+                Objects.equals(preLabelId, user.preLabelId) &&
+                Objects.equals(preLabelTime, user.preLabelTime) &&
+                Objects.equals(beforePrice2, user.beforePrice2);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, uid, kolName, uniqueId, isSettled, fansCount, price, expectedPlayNum, avatarUrl, starLabel, beforePrice, cooperateDegree, lastLabelTime, preLabelTime);
+        return Objects.hash(id, uid, kolName, uniqueId, isSettled, fansCount, price, expectedPlayNum, avatarUrl, starLabel, selectLabel1, selectLabel2, selectLabel3, beforePrice, cooperateDegree, lastLabelId, lastLabelTime, preLabelId, preLabelTime, beforePrice2);
     }
 }
