@@ -33,15 +33,15 @@
                 ,height: 600
                 ,url: '/brandList'
                 // ,page: true //开启分页
-                ,title: '品牌列表'
+                ,title: 'KOL列表'
                 // ,toolbar: '#toolbarDemo'  //开启头部工具栏，并为其绑定左侧模板
-                ,cols: [[ //表头
-                    {field: 'brand_name', title: '品牌名称', width:150, event: 'clos'}
-                    ,{field: 'trader_count', title: '经销商数量', width:130, event: 'clos'}
-                    ,{field: 'live_trader_count', title: '直播经销商个数', width:140, event:'clos'}
-                    ,{field: 'update_time', title: '更新时间', width: 110, event: 'clos'}
-                    ,{field: 'username', title: '用户名', width: 110, event:'cols'}
-                    ,{field: 'password', title: '密码', width: 110, event:'cols'}
+                ,cols: [[ //表头 AvatarUrl douyinId StarLabel price
+                    {field: 'AvatarUrl', title: '头像', width:150, event: 'clos'}
+                    ,{field: 'kol_name', title: '名称', width:130, event: 'clos'}
+                    ,{field: 'douyinId', title: '抖音号', width:140, event:'clos'}
+                    ,{field: 'StarLabel', title: '星图标签', width: 110, event: 'clos'}
+                    ,{field: 'price', title: '星图结合', width: 110, event:'cols'}
+                    ,{field: 'beforePrice', title: '过往合作价格', width: 110, event:'cols'}
                 ]]
                 ,done: function(res,curr,count){
                     $('td').css({'cursor':'pointer'}); //设置成指针放在表格上换成手指

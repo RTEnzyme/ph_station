@@ -1,7 +1,7 @@
 package com.lemon.admin.cofjus.controller;
 
-import com.lemon.admin.cofjus.entity.Agent;
-import com.lemon.admin.cofjus.repositories.AgentRepository;
+import com.lemon.admin.cofjus.entity.Operator;
+import com.lemon.admin.cofjus.repositories.OperatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +13,13 @@ import java.util.Map;
 public class MySubmitController {
 
     @Autowired
-    private AgentRepository agentRepository;
+    private OperatorRepository operatorRepository;
 
     @ResponseBody
     @RequestMapping(value = "/changeInformation", method = RequestMethod.POST)
     public int mySubmit(@RequestBody Map<String,String> reqMap) {
 
-        Agent agent = agentRepository.findByUserName("admin");
+        Operator agent = operatorRepository.findByUserName("admin");
 //        String phone = reqMap.get("phone");
         String password =encodePassword(reqMap.get("password"));
 //        String mailbox = reqMap.get("mailbox");
@@ -31,7 +31,7 @@ public class MySubmitController {
 //        mymap.put("phone",phone);
 //        mymap.put("password",password);
 //        mymap.put("mailbox",mailbox);
-        agentRepository.save(agent);
+        operatorRepository.save(agent);
         int res = 1;
         return res;
 

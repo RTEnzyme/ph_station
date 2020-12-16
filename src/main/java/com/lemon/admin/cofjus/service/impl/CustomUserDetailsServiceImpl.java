@@ -1,8 +1,9 @@
 package com.lemon.admin.cofjus.service.impl;
 
 
-import com.lemon.admin.cofjus.entity.Agent;
-import com.lemon.admin.cofjus.repositories.AgentRepository;
+import com.lemon.admin.cofjus.entity.*;
+import com.lemon.admin.cofjus.repositories.LabelRepository;
+import com.lemon.admin.cofjus.repositories.OperatorRepository;
 import com.lemon.admin.cofjus.service.CustomUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Ji Rui
@@ -25,14 +27,17 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
     Logger logger = LoggerFactory.getLogger(CustomUserDetailsServiceImpl.class);
     @Autowired
-    AgentRepository agentRepository;
+    OperatorRepository operatorRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Agent usr = null;
-        if(!username.equals("admin")){
-            return null;
-        }
-        usr = agentRepository.findByUserName(username);
+        Operator usr = null;
+        // if(!username.equals("admin")){
+        //     return null;
+        // }
+        // Optional<Label> lb = labelRepository.findById(1);
+
+        usr = operatorRepository.findByUserName(username);
         User user = null;
         if(usr != null){
             user = new User(username, usr.getPassword(), true, true, true, true, getAuthority());

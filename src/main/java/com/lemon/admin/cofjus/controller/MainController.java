@@ -1,8 +1,8 @@
 package com.lemon.admin.cofjus.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.lemon.admin.cofjus.entity.Brand;
-import com.lemon.admin.cofjus.repositories.BrandRepository;
+import com.lemon.admin.cofjus.entity.User;
+import com.lemon.admin.cofjus.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ import java.util.List;
 @Controller
 public class MainController {
     @Autowired
-    BrandRepository brandRepository;
+    UserRepository userRepository;
     @RequestMapping("/login")
     public ModelAndView login(){
         ModelAndView mv = new ModelAndView();
@@ -37,38 +37,48 @@ public class MainController {
     @RequestMapping("/brandList")
     @ResponseBody
     public String brandList(){
-        List<Brand> brands = brandRepository.findAll();
+        List<User> brands = userRepository.findAll();
         List<JSONObject> jsonObjectList = new ArrayList<>();
-        for(Brand brand:brands){
+        for(User brand:brands){
             //将数据加入到json中
             JSONObject json = new JSONObject();;
 //            json.put("avator_url",agent.getAvatar_url().replace(".webp",".png"));
-            json.put("brand_name",brand.getName());
-            if(brand.getTrader_count()!=null) {
-                json.put("trader_count", brand.getTrader_count());
+            json.put("kol_name",brand.getKolName());
+            // KOL头像，用户名，抖音号，星图标签（不可改），星图价格（不可改），
+
+            if(brand.getAvatarUrl()!=null) {
+                json.put("AvatarUrl", brand.getAvatarUrl());
             }else{
-                json.put("trader_count","");
+                json.put("AvatarUrl","");
             }
-            if(brand.getLive_trader_count()!=null) {
-                json.put("live_trader_count", brand.getLive_trader_count());
+
+            if(brand.getUniqueId()!=null) {
+                json.put("douyinId", brand.getUniqueId());
             }else{
-                json.put("live_trader_count","");
+                json.put("douyinId","");
             }
-            if(brand.getUpdate_time()!=null) {
-                json.put("update_time", brand.getUpdate_time());
+
+            if(brand.getStarLabel()!=null) {
+                json.put("StarLabel", brand.getStarLabel());
             }else{
-                json.put("update_time","");
+                json.put("StarLabel","");
             }
-            if(brand.getUsername()!=null) {
-                json.put("username", brand.getUsername());
+
+            if(brand.getPrice()!=null) {
+                json.put("price", brand.getPrice());
             }else{
-                json.put("username","");
+                json.put("price","");
             }
-            if(brand.getPassword()!=null) {
-                json.put("password", brand.getPassword());
+
+            if(brand.getBeforePrice()!=null) {
+                json.put("beforePrice", brand.getBeforePrice());
             }else{
-                json.put("password","");
+                json.put("beforePrice","");
             }
+
+            // 标注选单一（文本框+下拉），标注选单二，标注选单三，过往合作价格（可改），
+            // 合作配合度（高中低），最后标注人（不可改)
+
             jsonObjectList.add(json);
         }
         //生成Layui.table需要的数据格式
