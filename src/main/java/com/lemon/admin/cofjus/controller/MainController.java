@@ -10,10 +10,11 @@ import com.lemon.admin.cofjus.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,6 +193,24 @@ public class MainController {
         JSONObject json = new JSONObject();
         json.put("data",keys);
         return  json.toJSONString();
+    }
+    @RequestMapping("/update_user/")
+    @ResponseBody
+    public String update_user(@RequestParam("kol_name") String kol_name, @RequestParam(value = "before_price",defaultValue = "") String before_price, @RequestParam(value = "before_price2",defaultValue = "") String before_price2, @RequestParam(value = "CooperateDegree",defaultValue = "") String CooperateDegree, @RequestParam(value = "Label1",defaultValue = "") String Label1,
+                            @RequestParam(value = "Label2",defaultValue = "") String Label2, @RequestParam(value = "Label3",defaultValue = "") String Label3){
+//        System.out.println("test"+kol_name);
+
+        User usr = userRepository.findUsersByKolName(kol_name).get(0);
+        usr.setBeforePrice(before_price);
+        usr.setBeforePrice2(before_price2);
+        usr.setCooperateDegree(CooperateDegree);
+        usr.setSelectLabel1(Label1);
+        usr.setSelectLabel2(Label2);
+        usr.setSelectLabel3(Label3);
+        userRepository.save(usr);
+        JSONObject json = new JSONObject();
+        json.put("flag","success");
+        return json.toJSONString();
     }
 }
 

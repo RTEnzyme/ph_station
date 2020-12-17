@@ -193,23 +193,25 @@
                             ,Label2: update_time
                             ,Label3: password
                         })
-                        // $.ajax({
-                        //     url:'/update_brand',
-                        //     type:"post",
-                        //     contentType:"application/json;charset=utf-8",
-                        //     dataType:'json',
-                        //     data:{
-                        //         brand_name:config_name,
-                        //         url:url,
-                        //         metadata:metadata
-                        //     },
-                        //     success:function(res){
-                        //         layer.msg('操作成功');
-                        //     },
-                        //     error:function(res){
-                        //         layer.msg('操作失败，稍后再试！');
-                        //     }
-                        // })
+                        // console.log(data.kol_name)
+
+                        $.ajax({
+                            url:'/update_user/',
+                            type:"post",
+                            dataType:'json',
+                            data: {
+                                kol_name: data.kol_name
+                                ,beforePrice: config_name
+                                ,beforePrice2: url
+                                ,CooperateDegree: metadata
+                                ,Label1: live_trade_count
+                                ,Label2: update_time
+                                ,Label3: password
+                            },
+                            success(data){
+                                layer.msg('操作成功');
+                            }
+                        })
                         layer.close(index);
 
                     }
