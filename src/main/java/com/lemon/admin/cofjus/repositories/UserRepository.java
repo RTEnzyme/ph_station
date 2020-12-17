@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
 
+    List<User> findByKolNameContaining(String name);
+
+    List<User> findByUniqueIdContaining(String name);
+
     List<User> findUsersByKolName(String name);
 
     List<User> findUsersByUniqueId(String uid);

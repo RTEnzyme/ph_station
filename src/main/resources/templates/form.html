@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
+    <script src="/layui/layui.js"></script>
+    <script src="/js/jquery.min.js"></script>
+</head>
+<body>
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">过往合作价格1-20S</label>
+        <div class="layui-input-block">
+            <input type="text" id="before_price" name="price" required  lay-verify="required" placeholder="请输入数字"  class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">过往合作价格20-60S</label>
+        <div class="layui-input-inline">
+            <input type="text" id="before_price_2" name="price2" required lay-verify="required" placeholder="请输入数字"  class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">合作配合度</label>
+        <div class="layui-input-block">
+            <select name="city" lay-verify="required" id="CooperateDegree">
+                <option value="">请选择配合度</option>
+                <option value="高">高</option>
+                <option value="中">中</option>
+                <option value="低">低</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标签1</label>
+        <div class="layui-input-block">
+            <select name="city" lay-verify="required" id="label1">
+                <option value="">请选择标签</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标签2</label>
+        <div class="layui-input-block">
+            <select name="city" lay-verify="required" id="label2">
+                <option value="">请选择标签</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标签3</label>
+        <div class="layui-input-block">
+            <select name="city" lay-verify="required" id="label3">
+                <option value="">请选择标签</option>
+            </select>
+        </div>
+    </div>
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">复选框</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <input type="checkbox" name="like[write]" title="写作">-->
+<!--            <input type="checkbox" name="like[read]" title="阅读" checked>-->
+<!--            <input type="checkbox" name="like[dai]" title="发呆">-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">开关</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <input type="checkbox" name="switch" lay-skin="switch">-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">单选框</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <input type="radio" name="sex" value="男" title="男">-->
+<!--            <input type="radio" name="sex" value="女" title="女" checked>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item layui-form-text">-->
+<!--        <label class="layui-form-label">文本域</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <div class="layui-input-block">-->
+<!--            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>-->
+<!--            <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+<!--        </div>-->
+<!--    </div>-->
+</form>
+
+<script>
+    window.onload = function(){
+        $.ajaxSettings.async = false;
+        $.ajax({
+            url: "/labelcontent",
+            type : "post",
+            dataType : "json",
+            // data: {
+            //     companynm : $("#companyid").val()
+            // },
+            success: function( data ) {
+                // console.log(data);
+                let lableContent = [];
+                for (let i in data['data']) {
+                    lableContent.push(data['data'][i]); //属性
+                    //arr.push(object[i]); //值
+                }
+                // console.log(lableContent);
+                for(let i of lableContent){
+                    // console.log(i);
+                    $("#label1").append("<option value="+i+">"+i+"</option>");
+                    $("#label2").append("<option value="+i+">"+i+"</option>");
+                    $("#label3").append("<option value="+i+">"+i+"</option>");
+                }
+                var url = location.search; //获取url中"?“符后的字串
+                var str = url.substr(1);
+                strs = str.split("&");
+                let label1 = decodeURIComponent(strs[0]);//获取url中的id
+                console.log(label1);
+                let label2= decodeURIComponent(strs[1]);//获取url中的name
+                let label3= decodeURIComponent(strs[2]);//获取url中的name
+                let shui = decodeURIComponent(strs[3]);
+                if(label1!=="") {
+                    $("#label1").val(label1);
+                }
+                if(label2!=="") {
+                    $("#label2").val(label2);
+                }
+                if(label3!=="") {
+                    $("#label3").val(label3);
+                }
+                if(shui!=="") {
+                    $("#CooperateDegree").val(shui);
+                }
+                formRender()
+                function formRender(){
+                    layui.use('form', function(){
+                        var form = layui.form;
+                        form.render();
+                    });}
+            }});
+        $.ajaxSettings.async = true;
+    }
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

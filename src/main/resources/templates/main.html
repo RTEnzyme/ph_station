@@ -7,7 +7,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
+    <script src="/layui/layui.js"></script>
+    <script src="/js/jquery.min.js"></script>
     <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/css/jquery-ui.css" />
+    <!-- 引入jQuery UI的js文件 -->
+    <script type="text/javascript" src="/js/jquery-ui.min.js" ></script>
+    <style>
+        .ui-autocomplete {
+            max-height: 100px;
+            overflow-y: auto;
+            /* 防止水平滚动条 */
+            overflow-x: hidden;
+        }
+        /* IE 6 不支持 max-height
+         * 我们使用 height 代替，但是这会强制菜单总是显示为那个高度
+         */
+        * html .ui-autocomplete {
+            height: 100px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -23,9 +42,9 @@
                     <div class="layui-col-md2 layui-col-sm3 layui-col-xs3" style="text-align: left">
 
                         <div class="layui-card">
-                            总标注数： <br/>
+                            总标注数：${labeled_count} <br/>
                             今日标注数： <br/>
-                            标注被修改次数： <br/>
+                            标注被修改次数： ${update_count}<br/>
                         </div>
                     </div>
 
@@ -48,9 +67,29 @@
         </div>
 
     </div>
-    <script src="/layui/layui.js"></script>
-    <script src="/js/jquery.min.js"></script>
+
     <script>
+        window.onload=function(){
+            let auto_data = [];
+            $.ajax({
+                url: "/autocomplete",
+                type : "post",
+                dataType : "json",
+                // data: {
+                //     companynm : $("#companyid").val()
+                // },
+                success: function( data ) {
+                       // console.log(data);
+                    for (let i in data['data']) {
+                        auto_data.push(data['data'][i]); //属性
+                        //arr.push(object[i]); //值
+                    }
+                }});
+            $("#send_name").autocomplete({
+                source: auto_data
+                ,minLength: 2
+            });
+        }
         var sValue = 'name';
         function getSelectValue(obj) {
             sValue = obj.options[obj.options.selectedIndex].value; //这是取值
@@ -131,27 +170,28 @@
                 layer.open({
                     type: 2
                     ,title: '修改信息'
-                    ,content: 'data_form.html'
+                    ,content: 'form.html?'+data.Label1+'&'+data.Label2+'&'+data.Label3+'&'+data.CooperateDegree
+                    ,height: 600
                     // ,maxmin: true
                     ,area: ['500px', '450px']
                     ,btn: ['确定', '取消']
                     ,yes: function(index, layero){
-                        let config_name = $(layero).find('iframe')[0].contentWindow.brand_name.value;
-                        let url = $(layero).find('iframe')[0].contentWindow.trader_count.value;
-                        let metadata = $(layero).find('iframe')[0].contentWindow.username.value;
-                        let live_trade_count = $(layero).find('iframe')[0].contentWindow.live_trader_count.value;
-                        let update_time = $(layero).find('iframe')[0].contentWindow.update_time.value;
-                        let password = $(layero).find('iframe')[0].contentWindow.password.value;
+                        let config_name = $(layero).find('iframe')[0].contentWindow.before_price.value;
+                        let url = $(layero).find('iframe')[0].contentWindow.before_price_2.value;
+                        let metadata = $(layero).find('iframe')[0].contentWindow.CooperateDegree.value;
+                        let live_trade_count = $(layero).find('iframe')[0].contentWindow.label1.value;
+                        let update_time = $(layero).find('iframe')[0].contentWindow.label2.value;
+                        let password = $(layero).find('iframe')[0].contentWindow.label3.value;
                         //同步数据表格中的数据
-                        console.log(config_name);
-                        console.log(url);
+                        // console.log(config_name);
+                        // console.log(url);
                         obj.update({
-                            brand_name:config_name,
-                            trader_count:url,
-                            username:metadata,
-                            update_time: update_time,
-                            live_trade_count: live_trade_count,
-                            password: password
+                            beforePrice: config_name
+                            ,beforePrice2: url
+                            ,CooperateDegree: metadata
+                            ,Label1: live_trade_count
+                            ,Label2: update_time
+                            ,Label3: password
                         })
                         // $.ajax({
                         //     url:'/update_brand',
@@ -188,12 +228,13 @@
                         /* ---- 附加内容 看看就好  End ---- */
 
                         // 测试 ：
-                        body.find("#brand_name").val(data.brand_name);  // 方式一
-                        body.find("#trader_count").val(data.trader_count)
-                        body.find("#username").val(data.username)
-                        body.find("#live_trader_count").val(data.live_trader_count);
-                        body.find("#update_time").val(data.update_time);
-                        body.find("#password").val(data.password);
+                        body.find("#before_price").val(data.beforePrice);  // 方式一
+                        body.find("#before_price_2").val(data.beforePrice2)
+                        body.find("#CooperateDegree").val(data.CooperateDegree)
+                        // console.log(data.Label1);
+                        body.find("#label1").val(data.Label1);
+                        body.find("#label2").val(data.Label2);
+                        body.find("#label3").val(data.Label3);
                         // div.find("#username").val("admin");  // 方式二
                     }
                 });

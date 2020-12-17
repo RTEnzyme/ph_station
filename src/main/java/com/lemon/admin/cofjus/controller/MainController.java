@@ -1,12 +1,16 @@
 package com.lemon.admin.cofjus.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.lemon.admin.cofjus.entity.Label;
+import com.lemon.admin.cofjus.entity.Operator;
 import com.lemon.admin.cofjus.entity.User;
+import com.lemon.admin.cofjus.repositories.LabelRepository;
+import com.lemon.admin.cofjus.repositories.OperatorRepository;
 import com.lemon.admin.cofjus.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,6 +21,13 @@ import java.util.List;
 public class MainController {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    OperatorRepository operatorRepository;
+
+    @Autowired
+    LabelRepository labelRepository;
+
     @RequestMapping("/login")
     public ModelAndView login(){
         ModelAndView mv = new ModelAndView();
@@ -26,12 +37,20 @@ public class MainController {
     @RequestMapping("/index")
     public ModelAndView index(){
         ModelAndView mv = new ModelAndView();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        org.springframework.security.core.userdetails.User usr = (org.springframework.security.core.userdetails.User)principal;
+        mv.addObject("username",usr.getUsername());
         mv.setViewName("index.html");
         return mv;
     }
     @RequestMapping("/main")
     public ModelAndView main(){
         ModelAndView mv = new ModelAndView();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        org.springframework.security.core.userdetails.User usr = (org.springframework.security.core.userdetails.User)principal;
+        Operator agent = operatorRepository.findByUserName(usr.getUsername());
+        mv.addObject("labeled_count",agent.getLabeledCount());
+        mv.addObject("update_count",agent.getUpdateCount());
         mv.setViewName("main.html");
         return mv;
     }
@@ -148,6 +167,31 @@ public class MainController {
         jsonContainer.put("count",brands.size());
         return jsonContainer.toJSONString();
     }
-
+    @RequestMapping("/autocomplete")
+    @ResponseBody
+    public String autocomplete(){
+        List<String> keys = new ArrayList<>();
+        List<User> users = userRepository.findAll();
+        for(User user:users){
+            keys.add(user.getKolName());
+            keys.add(user.getUniqueId());
+        }
+        JSONObject json = new JSONObject();
+        json.put("data",keys);
+        return  json.toJSONString();
+    }
+    @RequestMapping("/labelcontent")
+    @ResponseBody
+    public String labelcontent(){
+        List<Label> labels = labelRepository.findAll();
+        List<String> keys = new ArrayList<>();
+        for(Label label:labels){
+            keys.add(label.getType());
+//            keys.add(user.getUniqueId());
+        }
+        JSONObject json = new JSONObject();
+        json.put("data",keys);
+        return  json.toJSONString();
+    }
 }
 

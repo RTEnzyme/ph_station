@@ -56,6 +56,13 @@
             <version>1.2.74</version>
         </dependency>
 
+        <!-- beetl模板引擎 -->
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl-framework-starter</artifactId>
+            <version>1.2.19.RELEASE</version>
+        </dependency>
+
 
         <!--        &lt;!&ndash;        thymeleaf模板引擎依赖&ndash;&gt;-->
 <!--        <dependency>-->
