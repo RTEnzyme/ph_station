@@ -196,13 +196,12 @@ public class MainController {
     }
     @RequestMapping("/update_user/")
     @ResponseBody
-    public String update_user(@RequestParam("kol_name") String kol_name, @RequestParam(value = "before_price",defaultValue = "") String before_price, @RequestParam(value = "before_price2",defaultValue = "") String before_price2, @RequestParam(value = "CooperateDegree",defaultValue = "") String CooperateDegree, @RequestParam(value = "Label1",defaultValue = "") String Label1,
+    public String update_user(@RequestParam("kol_name") String kol_name, @RequestParam(value = "before_price",defaultValue = "") String before_price,  @RequestParam(value = "CooperateDegree",defaultValue = "") String CooperateDegree, @RequestParam(value = "Label1",defaultValue = "") String Label1,
                             @RequestParam(value = "Label2",defaultValue = "") String Label2, @RequestParam(value = "Label3",defaultValue = "") String Label3){
 //        System.out.println("test"+kol_name);
 
         User usr = userRepository.findUsersByKolName(kol_name).get(0);
         usr.setBeforePrice(before_price);
-        usr.setBeforePrice2(before_price2);
         usr.setCooperateDegree(CooperateDegree);
         usr.setSelectLabel1(Label1);
         usr.setSelectLabel2(Label2);

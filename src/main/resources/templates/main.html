@@ -182,7 +182,7 @@
                     ,btn: ['确定', '取消']
                     ,yes: function(index, layero){
                         let config_name = $(layero).find('iframe')[0].contentWindow.before_price.value;
-                        let url = $(layero).find('iframe')[0].contentWindow.before_price_2.value;
+                        // let url = $(layero).find('iframe')[0].contentWindow.before_price_2.value;
                         let metadata = $(layero).find('iframe')[0].contentWindow.CooperateDegree.value;
                         let live_trade_count = $(layero).find('iframe')[0].contentWindow.label1.value;
                         let update_time = $(layero).find('iframe')[0].contentWindow.label2.value;
@@ -192,7 +192,7 @@
                         // console.log(url);
                         obj.update({
                             beforePrice: config_name
-                            ,beforePrice2: url
+                            // ,beforePrice2: url
                             ,CooperateDegree: metadata
                             ,Label1: live_trade_count
                             ,Label2: update_time
@@ -207,7 +207,7 @@
                             data: {
                                 kol_name: data.kol_name
                                 ,beforePrice: config_name
-                                ,beforePrice2: url
+                                // ,beforePrice2: url
                                 ,CooperateDegree: metadata
                                 ,Label1: live_trade_count
                                 ,Label2: update_time
@@ -236,7 +236,7 @@
 
                         // 测试 ：
                         body.find("#before_price").val(data.beforePrice);  // 方式一
-                        body.find("#before_price_2").val(data.beforePrice2)
+                        // body.find("#before_price_2").val(data.beforePrice2)
                         body.find("#CooperateDegree").val(data.CooperateDegree)
                         // console.log(data.Label1);
                         body.find("#label1").val(data.Label1);
