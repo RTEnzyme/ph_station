@@ -61,6 +61,8 @@
                             <button class="layui-btn" data-type="reload" id="do_search">搜索</button>
                         </div>
                     </div>
+                    <br/>
+
                     <table id="demo" lay-filter="test"></table>
                 </div>
             </div>
@@ -113,12 +115,15 @@
                     ,{field: 'kol_name', title: '名称', width:100, event: 'clos'}
                     ,{field: 'douyinId', title: '抖音号', width:100, event:'clos'}
                     ,{field: 'StarLabel', title: '星图标签', width: 80, event: 'clos'}
-                    ,{field: 'price', title: '星图价格', width: 100, event:'cols'}
+                    ,{field: 'price', title: '星图价格', width: 100, event:'cols',align:'center', templet:function(d){
+                            var priceStr = d.price.split(",");
+                            var price = "";
+                            if (priceStr.length >1) {price = "¥"+priceStr[0].split(":")[1]} else {price = ""}
+                            return price}}
                     ,{field: 'Label1', title: '标签1', width: 80, event:'cols'}
                     ,{field: 'Label2', title: '标签2', width: 80, event:'cols'}
                     ,{field: 'Label3', title: '标签3', width: 80, event:'cols'}
-                    ,{field: 'beforePrice', title: '合作价格1', width: 80, event:'cols'}
-                    ,{field: 'beforePrice2', title: '合作价格2', width: 80, event:'cols'}
+                    ,{field: 'beforePrice', title: '合作价格', width: 80, event:'cols'}
                     ,{field: 'CooperateDegree', title: '合作配合度', width: 50, event:'cols'}
                     ,{field: 'LastLabelId', title: '最后标注人', width: 50, event:'cols'}
                     // beforePrice2 Label1 Label2 Label3 LastLabelId  CooperateDegree
@@ -247,6 +252,9 @@
         <img class= "icon-image" src="{{d.AvatarUrl}}" width="50" height="40">
         <!--    <img src="{{d.avator_url}}" style="height: 60px;width: 60px">-->
     </script>
+
+
+
 
 </div>
 </body>
