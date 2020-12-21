@@ -6,7 +6,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "operator", schema = "kol_data")
 public class Operator {
-    private int id;
+    private Integer id;
     private String userName;
     private String password;
     private Integer labeledCount;
@@ -14,11 +14,11 @@ public class Operator {
 
     @Id
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

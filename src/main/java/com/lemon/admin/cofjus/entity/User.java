@@ -4,8 +4,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Date;
 
 @Entity
 public class User {
@@ -25,9 +25,9 @@ public class User {
     private String beforePrice;
     private String cooperateDegree;
     private Integer lastLabelId;
-    private Timestamp lastLabelTime;
+    private Date lastLabelTime;
     private Integer preLabelId;
-    private Timestamp preLabelTime;
+    private Date preLabelTime;
     private String beforePrice2;
 
     @Id
@@ -192,11 +192,11 @@ public class User {
 
     @Basic
     @Column(name = "last_label_time", nullable = true)
-    public Timestamp getLastLabelTime() {
+    public Date getLastLabelTime() {
         return lastLabelTime;
     }
 
-    public void setLastLabelTime(Timestamp lastLabelTime) {
+    public void setLastLabelTime(Date lastLabelTime) {
         this.lastLabelTime = lastLabelTime;
     }
 
@@ -212,11 +212,11 @@ public class User {
 
     @Basic
     @Column(name = "pre_label_time", nullable = true)
-    public Timestamp getPreLabelTime() {
+    public Date getPreLabelTime() {
         return preLabelTime;
     }
 
-    public void setPreLabelTime(Timestamp preLabelTime) {
+    public void setPreLabelTime(Date preLabelTime) {
         this.preLabelTime = preLabelTime;
     }
 

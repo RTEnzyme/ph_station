@@ -15,11 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class MainController {
+
     @Autowired
     UserRepository userRepository;
 
@@ -44,14 +46,32 @@ public class MainController {
         mv.setViewName("index.html");
         return mv;
     }
+
     @RequestMapping("/main")
-    public ModelAndView main(){
+    public ModelAndView main() throws ParseException {
         ModelAndView mv = new ModelAndView();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         org.springframework.security.core.userdetails.User usr = (org.springframework.security.core.userdetails.User)principal;
         Operator agent = operatorRepository.findByUserName(usr.getUsername());
         mv.addObject("labeled_count",agent.getLabeledCount());
         mv.addObject("update_count",agent.getUpdateCount());
+
+        //当天日期
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String today = simpleDateFormat.format(date.getTime());
+
+        ArrayList<User> todayUsers = new ArrayList<>();
+        List<User> users = userRepository.findByLastLabelId(agent.getId());
+        if (users.size()>0) {
+            for (User user : users) {
+                if (user.getLastLabelTime().getTime() > simpleDateFormat.parse(today).getTime()) {
+                    todayUsers.add(user);
+                }
+            }
+        }
+
+        mv.addObject("todayCount", todayUsers.size());
         mv.setViewName("main.html");
         return mv;
     }
@@ -67,7 +87,34 @@ public class MainController {
         }else if(douyinId != null ){
             brands = userRepository.findUsersByUniqueId(douyinId);
         }else {
-            brands = userRepository.findAll().subList(0,100);
+            // TODO each operator has different view
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            org.springframework.security.core.userdetails.User currentUser = (org.springframework.security.core.userdetails.User)principal;
+            Operator agent = operatorRepository.findByUserName(currentUser.getUsername());
+            int startIndex =  agent.getId().intValue() - 1;
+            int start =0;
+            int end = 0;
+            // int totalUsers = (int)userRepository.count();
+           //  if (startIndex)
+            // brands = userRepository.cascadeQuery().subList(0,20);
+            int totalNum = (int)userRepository.count();
+            if (startIndex*200>=totalNum) {
+                start = 0;
+            }
+            else {
+                start = startIndex*200;
+            }
+
+            if (start + 200 >=totalNum) {
+                end = totalNum;
+            }
+            else {
+                end = start + 200 ;
+            }
+
+            brands = userRepository.findUsersByLastLabelId().subList(start,end);
+
+
         }
 
         for(User brand:brands){
@@ -145,7 +192,7 @@ public class MainController {
             // 合作配合度（高/中/低 下拉菜单）
 
             if(brand.getLastLabelId()!=null) {
-                json.put("LastLabelId", brand.getLastLabelId());
+                json.put("LastLabelId", operatorRepository.findById(brand.getLastLabelId().intValue()).getUserName());
             }else{
                 json.put("LastLabelId","");
             }
@@ -196,7 +243,7 @@ public class MainController {
     }
     @RequestMapping("/update_user/")
     @ResponseBody
-    public String update_user(@RequestParam("kol_name") String kol_name, @RequestParam(value = "before_price",defaultValue = "") String before_price,  @RequestParam(value = "CooperateDegree",defaultValue = "") String CooperateDegree, @RequestParam(value = "Label1",defaultValue = "") String Label1,
+    public String update_user(@RequestParam("kol_name") String kol_name, @RequestParam(value = "beforePrice",defaultValue = "") String before_price,  @RequestParam(value = "CooperateDegree",defaultValue = "") String CooperateDegree, @RequestParam(value = "Label1",defaultValue = "") String Label1,
                             @RequestParam(value = "Label2",defaultValue = "") String Label2, @RequestParam(value = "Label3",defaultValue = "") String Label3){
 //        System.out.println("test"+kol_name);
 
@@ -206,7 +253,44 @@ public class MainController {
         usr.setSelectLabel1(Label1);
         usr.setSelectLabel2(Label2);
         usr.setSelectLabel3(Label3);
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        org.springframework.security.core.userdetails.User currentUser = (org.springframework.security.core.userdetails.User)principal;
+        Operator agent = operatorRepository.findByUserName(currentUser.getUsername());
+
+        // KOL没有被标注
+        if (usr.getLastLabelId() == null){
+            usr.setLastLabelId(agent.getId());
+            Date updateDate = Calendar.getInstance().getTime();
+            usr.setLastLabelTime(updateDate);
+            agent.setLabeledCount(agent.getLabeledCount() + 1 );
+            operatorRepository.save(agent);
+        }
+        // KOL 已经被标注
+        else
+        {
+            // 自己修改，无操作
+            if (usr.getLastLabelId().intValue() == agent.getId()){
+
+            }
+            // 修改了别人的记录
+            else{
+                Operator preAgent = operatorRepository.findById(usr.getLastLabelId().intValue());
+                usr.setPreLabelId(usr.getLastLabelId());
+                usr.setPreLabelTime(usr.getLastLabelTime());
+                preAgent.setUpdateCount(preAgent.getUpdateCount() +1);
+                operatorRepository.save(preAgent);
+
+                usr.setLastLabelId(agent.getId());
+                Date updateDate = Calendar.getInstance().getTime();
+                usr.setLastLabelTime(updateDate);
+                agent.setLabeledCount(agent.getLabeledCount() + 1 );
+                operatorRepository.save(agent);
+            }
+        }
+
         userRepository.save(usr);
+
         JSONObject json = new JSONObject();
         json.put("flag","success");
         return json.toJSONString();

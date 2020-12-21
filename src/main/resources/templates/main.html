@@ -16,6 +16,7 @@
     <style>
         .ui-autocomplete {
             max-height: 100px;
+            background-color: #8b95a5;
             overflow-y: auto;
             /* 防止水平滚动条 */
             overflow-x: hidden;
@@ -43,7 +44,7 @@
 
                         <div class="layui-card">
                             总标注数：${labeled_count} <br/>
-                            今日标注数： <br/>
+                            今日标注数：${todayCount} <br/>
                             标注被修改次数： ${update_count}<br/>
                         </div>
                     </div>
@@ -90,6 +91,7 @@
             $("#send_name").autocomplete({
                 source: auto_data
                 ,minLength: 2
+
             });
         }
         var sValue = 'name';
@@ -101,6 +103,7 @@
         layui.use(['table','upload'], function(){
             var table = layui.table;
             //第一个实例
+
             table.render({
                 id:'test'
                 ,elem: '#demo'
@@ -111,11 +114,11 @@
                 ,title: 'KOL列表'
                 // ,toolbar: '#toolbarDemo'  //开启头部工具栏，并为其绑定左侧模板
                 ,cols: [[
-                    {field: 'AvatarUrl', title: '头像', align: 'center',width:80, templet: '#imgTemp',align:'center'}
+                    {field: 'AvatarUrl', title: '头像', align: 'center',width:60, templet: '#imgTemp',align:'center'}
                     ,{field: 'kol_name', title: '名称', width:100, event: 'clos'}
                     ,{field: 'douyinId', title: '抖音号', width:100, event:'clos'}
-                    ,{field: 'StarLabel', title: '星图标签', width: 80, event: 'clos'}
-                    ,{field: 'price', title: '星图价格', width: 100, event:'cols',align:'center', templet:function(d){
+                    ,{field: 'StarLabel', title: '星图标签', width: 90, event: 'clos'}
+                    ,{field: 'price', title: '星图价格', width: 90, event:'cols',align:'center', templet:function(d){
                             var priceStr = d.price.split(",");
                             var price = "";
                             if (priceStr.length >1) {price = "¥"+priceStr[0].split(":")[1]} else {price = ""}
@@ -123,9 +126,9 @@
                     ,{field: 'Label1', title: '标签1', width: 80, event:'cols'}
                     ,{field: 'Label2', title: '标签2', width: 80, event:'cols'}
                     ,{field: 'Label3', title: '标签3', width: 80, event:'cols'}
-                    ,{field: 'beforePrice', title: '合作价格', width: 80, event:'cols'}
-                    ,{field: 'CooperateDegree', title: '合作配合度', width: 50, event:'cols'}
-                    ,{field: 'LastLabelId', title: '最后标注人', width: 50, event:'cols'}
+                    ,{field: 'beforePrice', title: '合作价格', width: 90, event:'cols'}
+                    ,{field: 'CooperateDegree', title: '配合度', width: 70, event:'cols'}
+                    ,{field: 'LastLabelId', title: '标注人', width: 80, event:'cols'}
                     // beforePrice2 Label1 Label2 Label3 LastLabelId  CooperateDegree
                     // {field: 'SelectLabel1', title: '标签1', width: 110, event:'cols'}
                 ]]
@@ -171,87 +174,108 @@
             );
             table.on('row(test)',function(obj){
                 // obj.stylesheet = 'color:red';
-                var data = obj.data;
-                layer.open({
-                    type: 2
-                    ,title: '修改信息'
-                    ,content: 'form.html?'+data.Label1+'&'+data.Label2+'&'+data.Label3+'&'+data.CooperateDegree
-                    ,height: 600
-                    // ,maxmin: true
-                    ,area: ['500px', '450px']
-                    ,btn: ['确定', '取消']
-                    ,yes: function(index, layero){
-                        let config_name = $(layero).find('iframe')[0].contentWindow.before_price.value;
-                        // let url = $(layero).find('iframe')[0].contentWindow.before_price_2.value;
-                        let metadata = $(layero).find('iframe')[0].contentWindow.CooperateDegree.value;
-                        let live_trade_count = $(layero).find('iframe')[0].contentWindow.label1.value;
-                        let update_time = $(layero).find('iframe')[0].contentWindow.label2.value;
-                        let password = $(layero).find('iframe')[0].contentWindow.label3.value;
-                        //同步数据表格中的数据
-                        // console.log(config_name);
-                        // console.log(url);
-                        obj.update({
-                            beforePrice: config_name
-                            // ,beforePrice2: url
-                            ,CooperateDegree: metadata
-                            ,Label1: live_trade_count
-                            ,Label2: update_time
-                            ,Label3: password
-                        })
-                        // console.log(data.kol_name)
+                if ([[${todayCount}]] <=200) {
+                    var data = obj.data;
+                    layer.open({
+                        type: 2
+                        ,
+                        title: '修改信息'
+                        ,
+                        content: 'form.html?' + data.Label1 + '&' + data.Label2 + '&' + data.Label3 + '&' + data.CooperateDegree
+                        ,
+                        height: 600
+                        // ,maxmin: true
+                        ,
+                        area: ['500px', '400px']
+                        ,
+                        btn: ['确定', '取消']
+                        ,
+                        yes: function (index, layero) {
+                            let before_price_form = $(layero).find('iframe')[0].contentWindow.before_price.value;
+                            // let url = $(layero).find('iframe')[0].contentWindow.before_price_2.value;
 
-                        $.ajax({
-                            url:'/update_user/',
-                            type:"post",
-                            dataType:'json',
-                            data: {
-                                kol_name: data.kol_name
-                                ,beforePrice: config_name
+                            let CooperateDegree_form = $(layero).find('iframe')[0].contentWindow.CooperateDegree.value;
+                            let label1_form = $(layero).find('iframe')[0].contentWindow.label1.value;
+                            let label2_form = $(layero).find('iframe')[0].contentWindow.label2.value;
+                            let label3_form = $(layero).find('iframe')[0].contentWindow.label3.value;
+                            //同步数据表格中的数据
+                            // console.log(config_name);
+                            // console.log(url);
+                            obj.update({
+                                beforePrice: before_price_form
                                 // ,beforePrice2: url
-                                ,CooperateDegree: metadata
-                                ,Label1: live_trade_count
-                                ,Label2: update_time
-                                ,Label3: password
-                            },
-                            success(data){
-                                layer.msg('操作成功');
-                            }
-                        })
-                        layer.close(index);
+                                , CooperateDegree: CooperateDegree_form
+                                , Label1: label1_form
+                                , Label2: label2_form
+                                , Label3: label3_form
+                            })
+                            // console.log(data.kol_name)
 
-                    }
-                    ,success: function(layero, index){
+                            $.ajax({
+                                url: '/update_user/',
+                                type: "post",
+                                dataType: 'json',
+                                data: {
+                                    kol_name: data.kol_name
+                                    , beforePrice: before_price_form
+                                    , CooperateDegree: CooperateDegree_form
+                                    , Label1: label1_form
+                                    , Label2: label2_form
+                                    , Label3: label3_form
+                                },
+                                success(data) {
+                                    // layer.msg('KOL标注成功');
 
-                        // 方式一  其实就是获取的 子页面的 div
-                        var div = layero.find('iframe').contents().find('#useradmin');  // div.html() div里面的内容,不包含当前这个div
+                                    layer.msg('KOL标注成功', {icon: 1, time: 1000}, function () {
+                                        setTimeout('window.location.reload()', 1000);
+                                    });
 
-                        // 方式二
-                        var body = layer.getChildFrame('body', index);  // body.html() body里面的内容
+                                }
+                            })
+                            layer.close(index);
+                        }
+                        ,
+                        success: function (layero, index) {
+
+                            // 方式一  其实就是获取的 子页面的 div
+                            var div = layero.find('iframe').contents().find('#useradmin');  // div.html() div里面的内容,不包含当前这个div
+
+                            // 方式二
+                            var body = layer.getChildFrame('body', index);  // body.html() body里面的内容
 
 
-                        /* ---- 附加内容 看看就好  Begin ---- */
-                        var iframeWindow = window['layui-layer-iframe'+ index]   // 方式一： 得到iframe页的窗口对象
-                        // var iframeWindow = window[layero.find('iframe')[0]['name']];   // 方式二： 得到iframe页的窗口对象
-                        /* ---- 附加内容 看看就好  End ---- */
+                            /* ---- 附加内容 看看就好  Begin ---- */
+                            var iframeWindow = window['layui-layer-iframe' + index]   // 方式一： 得到iframe页的窗口对象
+                            // var iframeWindow = window[layero.find('iframe')[0]['name']];   // 方式二： 得到iframe页的窗口对象
+                            /* ---- 附加内容 看看就好  End ---- */
 
-                        // 测试 ：
-                        body.find("#before_price").val(data.beforePrice);  // 方式一
-                        // body.find("#before_price_2").val(data.beforePrice2)
-                        body.find("#CooperateDegree").val(data.CooperateDegree)
-                        // console.log(data.Label1);
-                        body.find("#label1").val(data.Label1);
-                        body.find("#label2").val(data.Label2);
-                        body.find("#label3").val(data.Label3);
-                        // div.find("#username").val("admin");  // 方式二
-                    }
-                });
+                            // 测试 ：
+                            body.find("#before_price").val(data.beforePrice);  // 方式一
+                            // body.find("#before_price_2").val(data.beforePrice2)
+                            body.find("#CooperateDegree").val(data.CooperateDegree)
+                            // console.log(data.Label1);
+                            body.find("#label1").val(data.Label1);
+                            body.find("#label2").val(data.Label2);
+                            body.find("#label3").val(data.Label3);
+                            // div.find("#username").val("admin");  // 方式二
+                        }
+                    });
+                }
+                else {
+                    layer.open({
+                        type: 1,
+                        content: '           您已经完成200个KOL标注，谢谢！',
+                        area: ['600px', '400px'],
+                        resize:false
+                    });
+                }
             })
         });
 
     </script>
 
     <script type="text/html" id="imgTemp">
-        <img class= "icon-image" src="{{d.AvatarUrl}}" width="50" height="40">
+        <img class= "icon-image" src="{{d.AvatarUrl}}" width="40" height="40">
         <!--    <img src="{{d.avator_url}}" style="height: 60px;width: 60px">-->
     </script>
 
