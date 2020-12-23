@@ -21,7 +21,6 @@ import java.util.*;
 
 @Controller
 public class MainController {
-
     @Autowired
     UserRepository userRepository;
 
@@ -46,7 +45,6 @@ public class MainController {
         mv.setViewName("index.html");
         return mv;
     }
-
     @RequestMapping("/main")
     public ModelAndView main() throws ParseException {
         ModelAndView mv = new ModelAndView();
@@ -89,33 +87,31 @@ public class MainController {
         }else {
             // TODO each operator has different view
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            org.springframework.security.core.userdetails.User currentUser = (org.springframework.security.core.userdetails.User)principal;
+            org.springframework.security.core.userdetails.User currentUser = (org.springframework.security.core.userdetails.User) principal;
             Operator agent = operatorRepository.findByUserName(currentUser.getUsername());
-            int startIndex =  agent.getId().intValue() - 1;
-            int start =0;
+            int startIndex = agent.getId().intValue() - 1;
+            int start = 0;
             int end = 0;
             // int totalUsers = (int)userRepository.count();
-           //  if (startIndex)
+            //  if (startIndex)
             // brands = userRepository.cascadeQuery().subList(0,20);
-            int totalNum = (int)userRepository.count();
-            if (startIndex*200>=totalNum) {
+            int totalNum = (int) userRepository.count();
+            if (startIndex * 200 >= totalNum) {
                 start = 0;
-            }
-            else {
-                start = startIndex*200;
+            } else {
+                start = startIndex * 200;
             }
 
-            if (start + 200 >=totalNum) {
+            if (start + 200 >= totalNum) {
                 end = totalNum;
+            } else {
+                end = start + 200;
             }
-            else {
-                end = start + 200 ;
-            }
 
-            brands = userRepository.findUsersByLastLabelId().subList(start,end);
-
-
+            brands = userRepository.findUsersByLastLabelId().subList(start, end);
         }
+
+
 
         for(User brand:brands){
             //将数据加入到json中
@@ -192,7 +188,7 @@ public class MainController {
             // 合作配合度（高/中/低 下拉菜单）
 
             if(brand.getLastLabelId()!=null) {
-                json.put("LastLabelId", operatorRepository.findById(brand.getLastLabelId().intValue()).getUserName());
+                json.put("LastLabelId", brand.getLastLabelId());
             }else{
                 json.put("LastLabelId","");
             }
@@ -243,7 +239,7 @@ public class MainController {
     }
     @RequestMapping("/update_user/")
     @ResponseBody
-    public String update_user(@RequestParam("kol_name") String kol_name, @RequestParam(value = "beforePrice",defaultValue = "") String before_price,  @RequestParam(value = "CooperateDegree",defaultValue = "") String CooperateDegree, @RequestParam(value = "Label1",defaultValue = "") String Label1,
+    public String update_user(@RequestParam("kol_name") String kol_name, @RequestParam(value = "before_price",defaultValue = "") String before_price,  @RequestParam(value = "CooperateDegree",defaultValue = "") String CooperateDegree, @RequestParam(value = "Label1",defaultValue = "") String Label1,
                             @RequestParam(value = "Label2",defaultValue = "") String Label2, @RequestParam(value = "Label3",defaultValue = "") String Label3){
 //        System.out.println("test"+kol_name);
 
@@ -290,7 +286,6 @@ public class MainController {
         }
 
         userRepository.save(usr);
-
         JSONObject json = new JSONObject();
         json.put("flag","success");
         return json.toJSONString();

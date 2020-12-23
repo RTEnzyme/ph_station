@@ -30,6 +30,15 @@
     </style>
 </head>
 <body>
+<ul class="layui-nav layui-bg-cyan">
+    <li class="layui-nav-item">
+        <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+        <dl class="layui-nav-child">
+            <dd><a href="/password.html">修改密码</a></dd>
+            <dd><a href="/logout">退出</a></dd>
+        </dl>
+    </li>
+</ul>
 <div class="container">
     <div class="layui-row layui-col-space15">
 
@@ -38,19 +47,11 @@
         <div class="layui-col-md12">
             <div class="layui-card">
 
-                <div class="layui-card-header">待标注KOL列表</div>
                 <div class="layui-card-body">
-                    <div class="layui-col-md2 layui-col-sm3 layui-col-xs3" style="text-align: left">
-
-                        <div class="layui-card">
-                            总标注数：${labeled_count} <br/>
-                            今日标注数：${todayCount} <br/>
-                            标注被修改次数： ${update_count}<br/>
-                        </div>
+                    <div class="layui-col-md12">
+                        <p><b>待标注KOL列表</b> <p align="right"> 累计标注${labeled_count}个&nbsp 今日标注${todayCount}个 &nbsp被修改${update_count}个</p></p>
                     </div>
-
-
-                    <div class="layui-card">
+<!--                    <div class="layui-card">-->
                         <div class="demoTable" style="text-align: right">
                             <select name="city" onchange="getSelectValue(this);">
                                 <option value="name">用户名</option>
@@ -61,8 +62,8 @@
                             </div>
                             <button class="layui-btn" data-type="reload" id="do_search">搜索</button>
                         </div>
-                    </div>
-                    <br/>
+<!--                    </div>-->
+<!--                    <br/>-->
 
                     <table id="demo" lay-filter="test"></table>
                 </div>
@@ -141,28 +142,28 @@
             $('#do_search').on('click', function () {
                     // 搜索条件
                     let send_name = $('#send_name').val();
-                    console.log(sValue)
+
                     // let select = $('#select').val();
                     // var send_data = $('#send_data').val();
                     if(sValue === 'name'){
+                    table.reload('test', {
+                        method: 'post'
+                        , where: {
+                            // 'csrfmiddlewaretoken': token,
+                            'kol_name': send_name,
+                            // 'send_data': send_data,
+                        }
+                        , page: {
+                            curr: 1
+                        }
+                    },'data')}
+                    else if(sValue === 'id'){
                         table.reload('test', {
                             method: 'post'
                             , where: {
                                 // 'csrfmiddlewaretoken': token,
-                                'kol_name': send_name,
-                                // 'send_data': send_data,
-                            }
-                            , page: {
-                                curr: 1
-                            }
-                        },'data')
-                    }else{
-                        table.reload('test', {
-                            method: 'post'
-                            , where: {
-                                // 'csrfmiddlewaretoken': token,
-                                'douyinId': send_name,
                                 'kol_name': "",
+                                'douyinId': send_name
                                 // 'send_data': send_data,
                             }
                             , page: {
@@ -170,6 +171,7 @@
                             }
                         },'data')
                     }
+
                 }
             );
             table.on('row(test)',function(obj){
@@ -279,8 +281,14 @@
         <!--    <img src="{{d.avator_url}}" style="height: 60px;width: 60px">-->
     </script>
 
+    <script>
+        //注意：导航 依赖 element 模块，否则无法进行功能性操作
+        layui.use('element', function(){
+            var element = layui.element;
 
-
+            //…
+        });
+    </script>
 
 </div>
 </body>
