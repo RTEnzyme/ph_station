@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.text.Collator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -243,11 +244,13 @@ public class MainController {
     @ResponseBody
     public String labelcontent(){
         List<Label> labels = labelRepository.findAll();
+        Comparator cmp = Collator.getInstance(java.util.Locale.CHINA);
         List<String> keys = new ArrayList<>();
         for(Label label:labels){
             keys.add(label.getType());
 //            keys.add(user.getUniqueId());
         }
+        keys.sort(cmp);
         JSONObject json = new JSONObject();
         json.put("data",keys);
         return  json.toJSONString();
