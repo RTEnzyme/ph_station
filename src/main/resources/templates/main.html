@@ -11,8 +11,19 @@
     <script src="/js/jquery.min.js"></script>
     <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
     <link rel="stylesheet" href="/css/jquery-ui.css" />
+    <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin/style/template.css" media="all">
     <!-- 引入jQuery UI的js文件 -->
     <script type="text/javascript" src="/js/jquery-ui.min.js" ></script>
+    <style type="text/css">
+        .layui-table-cell {
+            /*height: auto !important;*/
+            white-space: normal;
+            height: 60px;
+            text-align:center;
+            vertical-align:middle;
+        }
+    </style>
     <style>
         .ui-autocomplete {
             max-height: 100px;
@@ -31,8 +42,8 @@
 </head>
 <body>
 <ul class="layui-nav layui-bg-cyan">
-    <li class="layui-nav-item">
-        <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+    <li class="layui-nav-item layui-col-md-offset10">
+        <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">${username}</a>
         <dl class="layui-nav-child">
             <dd><a href="/password.html">修改密码</a></dd>
             <dd><a href="/logout">退出</a></dd>
@@ -53,12 +64,12 @@
                     </div>
 <!--                    <div class="layui-card">-->
                         <div class="demoTable" style="text-align: right">
-                            <select name="city" onchange="getSelectValue(this);">
-                                <option value="name">用户名</option>
-                                <option value="id">抖音号</option>>
-                            </select>
+<!--                            <select name="city" onchange="getSelectValue(this);">-->
+<!--                                <option value="name">用户名</option>-->
+<!--                                <option value="id">抖音号</option>>-->
+<!--                            </select>-->
                             <div class="layui-inline">
-                                <input class="layui-input" name="productId" id="send_name" autocomplete="off">
+                                <input class="layui-input" name="productId" id="send_name" autocomplete="off" placeholder="请输入用户名/抖音号">
                             </div>
                             <button class="layui-btn" data-type="reload" id="do_search">搜索</button>
                         </div>
@@ -95,12 +106,12 @@
 
             });
         }
-        var sValue = 'name';
-        function getSelectValue(obj) {
-            sValue = obj.options[obj.options.selectedIndex].value; //这是取值
-            // var sText = obj.options[obj.options.selectedIndex].innerHTML; //这是取文本内容
-            // document.getElementById("selectValue").innerHTML = sText + "，他的值为：" + sValue; //测试输出
-        };
+        // var sValue = 'name';
+        // function getSelectValue(obj) {
+        //     sValue = obj.options[obj.options.selectedIndex].value; //这是取值
+        //     // var sText = obj.options[obj.options.selectedIndex].innerHTML; //这是取文本内容
+        //     // document.getElementById("selectValue").innerHTML = sText + "，他的值为：" + sValue; //测试输出
+        // };
         layui.use(['table','upload'], function(){
             var table = layui.table;
             //第一个实例
@@ -109,60 +120,66 @@
                 id:'test'
                 ,elem: '#demo'
                 ,page: 'true'
-                ,height: 500
+                ,height: 1000
                 ,url: '/brandList'
                 // ,page: true //开启分页
                 ,title: 'KOL列表'
                 // ,toolbar: '#toolbarDemo'  //开启头部工具栏，并为其绑定左侧模板
                 ,cols: [[
-                    {field: 'AvatarUrl', title: '头像', align: 'center',width:60, templet: '#imgTemp',align:'center'}
-                    ,{field: 'kol_name', title: '名称', width:100, event: 'clos'}
-                    ,{field: 'douyinId', title: '抖音号', width:100, event:'clos'}
-                    ,{field: 'StarLabel', title: '星图标签', width: 90, event: 'clos'}
-                    ,{field: 'price', title: '星图价格', width: 90, event:'cols',align:'center', templet:function(d){
+                    {field: 'AvatarUrl', title: '头像', align: 'center',width:80, templet: '#imgTemp',align:'center'}
+                    ,{field: 'kol_name', title: '名称', width:100,align:'center'}
+                    ,{field: 'douyinId', title: '抖音号', width:100,align:'center'}
+                    ,{field: 'StarLabel', title: '星图标签', width: 70,align:'center'}
+                    ,{field: 'price', title: '星图价格', width: 90,align:'center', templet:function(d){
                             var priceStr = d.price.split(",");
                             var price = "";
-                            if (priceStr.length >1) {price = "¥"+priceStr[0].split(":")[1]} else {price = ""}
+                            if (priceStr.length >1) {
+                                let priceAfter = parseInt(priceStr[0].split(":")[1])
+                                let priceAfter2 = priceAfter.toLocaleString();
+                                price = "¥"+priceAfter2} else {price = ""}
                             return price}}
-                    ,{field: 'Label1', title: '标签1', width: 80, event:'cols'}
-                    ,{field: 'Label2', title: '标签2', width: 80, event:'cols'}
-                    ,{field: 'Label3', title: '标签3', width: 80, event:'cols'}
-                    ,{field: 'beforePrice', title: '合作价格', width: 90, event:'cols'}
-                    ,{field: 'CooperateDegree', title: '配合度', width: 70, event:'cols'}
-                    ,{field: 'LastLabelId', title: '标注人', width: 80, event:'cols'}
+                    ,{field: 'Label1', title: '标签1', width: 80, hide: 'true'}
+                    ,{field: 'Label2', title: '标签2', width: 80, hide: 'true'}
+                    ,{field: 'Label3', title: '标签3', width: 80, hide: 'true'}
+                    ,{field: 'label', title: '标签', width: 210,align:'center'}
+                    ,{field: 'beforePrice', title: '合作价格', width: 90,align:'center'}
+                    ,{field: 'CooperateDegree', title: '配合度', width: 70,align:'center'}
+                    ,{field: 'LastLabelId', title: '标注人', width: 80,align:'center'}
                     // beforePrice2 Label1 Label2 Label3 LastLabelId  CooperateDegree
                     // {field: 'SelectLabel1', title: '标签1', width: 110, event:'cols'}
                 ]]
                 ,done: function(res,curr,count){
-                    $('td').css({'cursor':'pointer'}); //设置成指针放在表格上换成手指
+                    $('td').css({'cursor':'pointer'}); //设置成指针放在表格上换成手指,水平垂直居中
                     $('table').width('100%');
+                    $('.layui-table-cell').css({ 'line-height':'60px', 'text-align':'center'});
+                    // $('th').css({'height':'40px'})
                 }
             });
             // 执行搜索，表格重载
             $('#do_search').on('click', function () {
                     // 搜索条件
                     let send_name = $('#send_name').val();
-
+                    console.log(send_name);
                     // let select = $('#select').val();
-                    // var send_data = $('#send_data').val();
-                    if(sValue === 'name'){
-                    table.reload('test', {
-                        method: 'post'
-                        , where: {
-                            // 'csrfmiddlewaretoken': token,
-                            'kol_name': send_name,
-                            // 'send_data': send_data,
-                        }
-                        , page: {
-                            curr: 1
-                        }
-                    },'data')}
-                    else if(sValue === 'id'){
+                    // // var send_data = $('#send_data').val();
+                    // if(sValue === 'name'){
+                    // table.reload('test', {
+                    //     method: 'post'
+                    //     , where: {
+                    //         // 'csrfmiddlewaretoken': token,
+                    //         'kol_name': send_name,
+                    //         // 'send_data': send_data,
+                    //     }
+                    //     , page: {
+                    //         curr: 1
+                    //     }
+                    // },'data')}
+                    // else if(sValue === 'id'){
                         table.reload('test', {
                             method: 'post'
                             , where: {
                                 // 'csrfmiddlewaretoken': token,
-                                'kol_name': "",
+                                // 'kol_name': "",
                                 'douyinId': send_name
                                 // 'send_data': send_data,
                             }
@@ -170,7 +187,7 @@
                                 curr: 1
                             }
                         },'data')
-                    }
+                    // }
 
                 }
             );
@@ -200,6 +217,16 @@
                             let label1_form = $(layero).find('iframe')[0].contentWindow.label1.value;
                             let label2_form = $(layero).find('iframe')[0].contentWindow.label2.value;
                             let label3_form = $(layero).find('iframe')[0].contentWindow.label3.value;
+                            let labelStr = '';
+                            if(label1_form.length !== 0){
+                                labelStr+=label1_form;
+                            }
+                            if(label2_form.length !== 0){
+                                labelStr+='，'+label2_form;
+                            }
+                            if(label3_form.length !== 0){
+                                labelStr+='，'+label3_form;
+                            }
                             //同步数据表格中的数据
                             // console.log(config_name);
                             // console.log(url);
@@ -224,12 +251,14 @@
                                     , Label1: label1_form
                                     , Label2: label2_form
                                     , Label3: label3_form
+                                    , label: labelStr
                                 },
                                 success(data) {
                                     // layer.msg('KOL标注成功');
 
                                     layer.msg('KOL标注成功', {icon: 1, time: 1000}, function () {
                                         setTimeout('window.location.reload()', 1000);
+                                        // table.reload()
                                     });
 
                                 }
@@ -277,7 +306,9 @@
     </script>
 
     <script type="text/html" id="imgTemp">
-        <img class= "icon-image" src="{{d.AvatarUrl}}" width="40" height="40">
+<!--        <div class="layadmin-homepage-pad-ver">-->
+        <img class="layadmin-homepage-pad-img" src="{{d.AvatarUrl}}" width="50" height="50">
+<!--        </div>-->
         <!--    <img src="{{d.avator_url}}" style="height: 60px;width: 60px">-->
     </script>
 

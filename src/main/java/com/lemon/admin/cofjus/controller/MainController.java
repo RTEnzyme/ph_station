@@ -53,7 +53,7 @@ public class MainController {
         Operator agent = operatorRepository.findByUserName(usr.getUsername());
         mv.addObject("labeled_count",agent.getLabeledCount());
         mv.addObject("update_count",agent.getUpdateCount());
-
+        mv.addObject("username",agent.getUserName());
         //当天日期
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -75,15 +75,19 @@ public class MainController {
     }
     @RequestMapping("/brandList")
     @ResponseBody
-    public String brandList(Integer limit,Integer page,String kol_name,String douyinId){
+    public String brandList(Integer limit,Integer page/**,String kol_name*/,String douyinId){
         List<User> brands;
         List<JSONObject> jsonObjectList = new ArrayList<>();
-        if(kol_name != null && !kol_name.equals("")){
+//        if(kol_name != null && !kol_name.equals("")){
 //             System.out.println(kol_name);
 //             System.out.println(douyinId);
-            brands = userRepository.findUsersByKolName(kol_name);
-        }else if(douyinId != null ){
+//            brands = userRepository.findUsersByKolName(kol_name);
+//        }else
+        if(douyinId != null ){
             brands = userRepository.findUsersByUniqueId(douyinId);
+            if(brands.size() == 0){
+                brands = userRepository.findUsersByKolName(douyinId);
+            }
         }else {
             // TODO each operator has different view
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -161,25 +165,36 @@ public class MainController {
 
             // 标签1（文本框+下拉菜单），标签2（文本框+下拉菜单），标签3（文本框+下拉菜单）
             // 标签1，2，3的下拉菜单来自 lable表中的50个标签
-
+            StringBuffer labels = new StringBuffer();
             if(brand.getSelectLabel1()!=null) {
                 json.put("Label1", brand.getSelectLabel1());
+                if(brand.getSelectLabel1().length() != 0) {
+                    labels.append(brand.getSelectLabel1());
+                }
             }else{
                 json.put("Label1","");
             }
 
             if(brand.getSelectLabel2()!=null) {
                 json.put("Label2", brand.getSelectLabel2());
+                if(brand.getSelectLabel2().length()!=0) {
+                    labels.append("，");
+                    labels.append(brand.getSelectLabel2());
+                }
             }else{
                 json.put("Label2","");
             }
 
             if(brand.getSelectLabel3()!=null) {
                 json.put("Label3", brand.getSelectLabel3());
+                if(brand.getSelectLabel3().length()!=0) {
+                    labels.append("，");
+                    labels.append(brand.getSelectLabel3());
+                }
             }else{
                 json.put("Label3","");
             }
-
+            json.put("label",labels.toString());
             if(brand.getCooperateDegree()!=null) {
                 json.put("CooperateDegree", brand.getCooperateDegree());
             }else{
