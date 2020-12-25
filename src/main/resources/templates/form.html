@@ -8,8 +8,13 @@
 </head>
 <body>
 <form class="layui-form" action="">
-
-    <div class="layui-form-item">
+    <div class="layui-form-item" style="height: 30px;width: 380px">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <label class="layui-form-label" id="name"></label>
+        </div>
+    </div>
+    <div class="layui-form-item" style="height: 30px;width: 380px">
         <label class="layui-form-label">标签1</label>
         <div class="layui-input-block">
             <select name="city" lay-verify="required" id="label1">
@@ -17,7 +22,7 @@
             </select>
         </div>
     </div>
-    <div class="layui-form-item">
+    <div class="layui-form-item" style="height: 30px;width: 380px">
         <label class="layui-form-label">标签2</label>
         <div class="layui-input-block">
             <select name="city" lay-verify="required" id="label2">
@@ -25,7 +30,7 @@
             </select>
         </div>
     </div>
-    <div class="layui-form-item">
+    <div class="layui-form-item" style="height: 30px;width: 380px">
         <label class="layui-form-label">标签3</label>
         <div class="layui-input-block">
             <select name="city" lay-verify="required" id="label3">
@@ -33,7 +38,7 @@
             </select>
         </div>
     </div>
-    <div class="layui-form-item">
+    <div class="layui-form-item" style="height: 30px;width: 380px">
         <label class="layui-form-label">合作价格</label>
         <div class="layui-input-block">
             <input type="text" id="before_price" name="price" required  lay-verify="required" placeholder="请输入数字"  class="layui-input">
@@ -45,7 +50,7 @@
     <!--            <input type="text" id="before_price_2" name="price2" required lay-verify="required" placeholder="请输入数字"  class="layui-input">-->
     <!--        </div>-->
     <!--    </div>-->
-    <div class="layui-form-item">
+    <div class="layui-form-item" style="height: 30px;width: 380px">
         <label class="layui-form-label">合作配合度</label>
         <div class="layui-input-block">
             <select name="city" lay-verify="required" id="CooperateDegree">
@@ -123,6 +128,8 @@
                 let label2= decodeURIComponent(strs[1]);//获取url中的name
                 let label3= decodeURIComponent(strs[2]);//获取url中的name
                 let shui = decodeURIComponent(strs[3]);
+                let kol_name = decodeURIComponent('<p style="color: red;text-align: left">'+strs[4]+'</p>'); // 获取url中的kol_name
+                $("#name").append(kol_name);
                 if(label1!=="") {
                     $("#label1").val(label1);
                 }

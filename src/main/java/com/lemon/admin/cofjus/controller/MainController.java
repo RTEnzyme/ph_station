@@ -37,16 +37,16 @@ public class MainController {
         mv.setViewName("login.html");
         return mv;
     }
-    @RequestMapping("/index")
-    public ModelAndView index(){
-        ModelAndView mv = new ModelAndView();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        org.springframework.security.core.userdetails.User usr = (org.springframework.security.core.userdetails.User)principal;
-        mv.addObject("username",usr.getUsername());
-        mv.setViewName("index.html");
-        return mv;
-    }
-    @RequestMapping("/main")
+//    @RequestMapping("/index")
+//    public ModelAndView index(){
+//        ModelAndView mv = new ModelAndView();
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        org.springframework.security.core.userdetails.User usr = (org.springframework.security.core.userdetails.User)principal;
+//        mv.addObject("username",usr.getUsername());
+//        mv.setViewName("index.html");
+//        return mv;
+//    }
+    @RequestMapping("/")
     public ModelAndView main() throws ParseException {
         ModelAndView mv = new ModelAndView();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -145,6 +145,7 @@ public class MainController {
 
             if(brand.getPrice()!=null) {
                 json.put("price", brand.getPrice());
+
             }else{
                 json.put("price","");
             }
@@ -152,17 +153,19 @@ public class MainController {
             // 过往合作价格 1-20s（文本框，只能填数字）
             if(brand.getBeforePrice()!=null) {
                 json.put("beforePrice", brand.getBeforePrice());
+                json.put("beforePriceShow",brand.getBeforePrice());
             }else{
                 json.put("beforePrice","");
+                json.put("beforePriceShow","");
             }
 
 
-            // 过往合作价格 20-60（文本框，只能填数字）
-            if(brand.getBeforePrice2()!=null) {
-                json.put("beforePrice2", brand.getBeforePrice2());
-            }else{
-                json.put("beforePrice2","");
-            }
+//            // 过往合作价格 20-60（文本框，只能填数字）
+//            if(brand.getBeforePrice2()!=null) {
+//                json.put("beforePrice2", brand.getBeforePrice2());
+//            }else{
+//                json.put("beforePrice2","");
+//            }
 
             // 标签1（文本框+下拉菜单），标签2（文本框+下拉菜单），标签3（文本框+下拉菜单）
             // 标签1，2，3的下拉菜单来自 lable表中的50个标签

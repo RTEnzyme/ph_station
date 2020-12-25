@@ -42,12 +42,24 @@
 </head>
 <body>
 <ul class="layui-nav layui-bg-cyan">
-    <li class="layui-nav-item layui-col-md-offset11">
+    <li class="layui-nav-item layui-this">
+        <b>待标注KOL列表</b>
+    </li>
+    <li class="layui-nav-item layui-col-md-offset6">
         <a href="">${username}</a>
         <dl class="layui-nav-child">
             <dd><a href="/password.html">修改密码</a></dd>
             <dd><a href="/logout">退出</a></dd>
         </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a>累计标注${labeled_count}个</a>
+    </li>
+    <li class="layui-nav-item">
+        <a>今日标注${todayCount}个</a>
+    </li>
+    <li class="layui-nav-item">
+        <a>被修改${update_count}个</a>
     </li>
 </ul>
 <div class="container">
@@ -59,9 +71,9 @@
             <div class="layui-card">
 
                 <div class="layui-card-body">
-                    <div class="layui-col-md12">
-                        <p><b>待标注KOL列表</b> <p align="right"> 累计标注${labeled_count}个&nbsp 今日标注${todayCount}个 &nbsp被修改${update_count}个</p></p>
-                    </div>
+<!--                    <div class="layui-col-md12">-->
+<!--                        <p><b>待标注KOL列表</b> <p align="right"> 累计标注${labeled_count}个&nbsp 今日标注${todayCount}个 &nbsp被修改${update_count}个</p></p>-->
+<!--                    </div>-->
 <!--                    <div class="layui-card">-->
                         <div class="demoTable" style="text-align: right">
 <!--                            <select name="city" onchange="getSelectValue(this);">-->
@@ -71,11 +83,11 @@
                             <div class="layui-inline">
                                 <input class="layui-input" name="productId" id="send_name" autocomplete="off" placeholder="请输入用户名/抖音号">
                             </div>
-                            <button class="layui-btn" data-type="reload" id="do_search">搜索</button>
+                            <button class="layui-btn layui-bg-cyan" data-type="reload" id="do_search">搜索</button>
                         </div>
 <!--                    </div>-->
 <!--                    <br/>-->
-
+                        <br>
                     <table id="demo" lay-filter="test"></table>
                 </div>
             </div>
@@ -141,8 +153,17 @@
                     ,{field: 'Label1', title: '标签1', width: 80, hide: 'true'}
                     ,{field: 'Label2', title: '标签2', width: 80, hide: 'true'}
                     ,{field: 'Label3', title: '标签3', width: 80, hide: 'true'}
-                    ,{field: 'label', title: '标签', width: 210,align:'center'}
-                    ,{field: 'beforePrice', title: '合作价格', width: 90,align:'center'}
+                    ,{field: 'label', title: '标签', width: 200,align:'center'}
+                    ,{field: 'beforePriceShow', title: '合作价格', width: 90,align:'center', templet:function(d){
+                            let priceStr = d.beforePriceShow;
+                            let price = "";
+                            if (priceStr.length >1) {
+                                let priceAfter = parseInt(priceStr)
+                                let priceAfter2 = priceAfter.toLocaleString();
+                                price = "¥"+priceAfter2} else {price = ""}
+                            return price
+                        }}
+                    ,{field: 'beforePrice', hide: 'true'}
                     ,{field: 'CooperateDegree', title: '配合度', width: 70,align:'center'}
                     ,{field: 'LastLabelId', title: '标注人', width: 80,align:'center'}
                     // beforePrice2 Label1 Label2 Label3 LastLabelId  CooperateDegree
@@ -200,24 +221,33 @@
                         ,
                         title: '修改信息'
                         ,
-                        content: 'form.html?' + data.Label1 + '&' + data.Label2 + '&' + data.Label3 + '&' + data.CooperateDegree
-                        ,
-                        height: 600
+                        content: 'form.html?' + data.Label1 + '&' + data.Label2 + '&' + data.Label3 + '&' + data.CooperateDegree + '&' + data.kol_name
+                        // ,
+                        // height: 600
                         // ,maxmin: true
                         ,
-                        area: ['500px', '400px']
+                        area: ['400px', '380px']
                         ,
                         btn: ['确定', '取消']
                         ,
                         yes: function (index, layero) {
                             let before_price_form = $(layero).find('iframe')[0].contentWindow.before_price.value;
                             // let url = $(layero).find('iframe')[0].contentWindow.before_price_2.value;
-
+                            // console.log(before_price_form);
                             let CooperateDegree_form = $(layero).find('iframe')[0].contentWindow.CooperateDegree.value;
                             let label1_form = $(layero).find('iframe')[0].contentWindow.label1.value;
                             let label2_form = $(layero).find('iframe')[0].contentWindow.label2.value;
                             let label3_form = $(layero).find('iframe')[0].contentWindow.label3.value;
                             let labelStr = '';
+                            // let priceStr = before_price_form;
+                            // let price = "";
+                            // if (priceStr.length >1) {
+                            //     let priceAfter = parseInt(priceStr)
+                            //     let priceAfter2 = priceAfter.toLocaleString();
+                            //     // console.log(priceAfter2);
+                            //     price = priceAfter2;
+                            //     console.log(price);
+                            // } else {price = ""}
                             if(label1_form.length !== 0){
                                 labelStr+=label1_form;
                             }
@@ -237,6 +267,7 @@
                                 , Label1: label1_form
                                 , Label2: label2_form
                                 , Label3: label3_form
+                                , beforePriceShow: before_price_form
                             })
                             // console.log(data.kol_name)
 
@@ -257,7 +288,7 @@
                                     // layer.msg('KOL标注成功');
 
                                     layer.msg('KOL标注成功', {icon: 1, time: 1000}, function () {
-                                        setTimeout('window.location.reload()', 1000);
+                                        // setTimeout('window.location.reload()', 1000);
                                         // table.reload()
                                     });
 

@@ -51,7 +51,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         .formLogin()
         .loginPage("/login")
         .loginProcessingUrl("/authentication/form")//登录请求url-form表单的action
-        .defaultSuccessUrl("/main",true)
+        .defaultSuccessUrl("/",true)
         .failureForwardUrl("/login.html?error")
         .permitAll()
         .and()
