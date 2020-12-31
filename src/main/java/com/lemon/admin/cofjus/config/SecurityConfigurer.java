@@ -1,5 +1,7 @@
 package com.lemon.admin.cofjus.config;
 
+import com.lemon.admin.cofjus.entity.Operator;
+import com.lemon.admin.cofjus.repositories.OperatorRepository;
 import com.lemon.admin.cofjus.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +31,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
   @Autowired
   CustomUserDetailsService userDetailsService;
 
+  @Autowired
+  OperatorRepository operatorRepository;
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -51,7 +55,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         .formLogin()
         .loginPage("/login")
         .loginProcessingUrl("/authentication/form")//登录请求url-form表单的action
-        .defaultSuccessUrl("/",true)
+        .defaultSuccessUrl("/index",true)
         .failureForwardUrl("/login.html?error")
         .permitAll()
         .and()

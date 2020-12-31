@@ -11,6 +11,7 @@ public class Operator {
     private String password;
     private Integer labeledCount;
     private Integer updateCount;
+    private Integer page;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -61,6 +62,12 @@ public class Operator {
     public void setUpdateCount(Integer updateCount) {
         this.updateCount = updateCount;
     }
+
+    @Basic
+    @Column(name= "page",nullable = true)
+    public Integer getPage(){ return page;}
+
+    public void setPage(Integer page){ this.page = page;}
 
     @Override
     public boolean equals(Object o) {

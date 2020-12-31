@@ -29,6 +29,7 @@ public class User {
     private Integer preLabelId;
     private Date preLabelTime;
     private String beforePrice2;
+    private Integer operatorId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -229,6 +230,12 @@ public class User {
     public void setBeforePrice2(String beforePrice2) {
         this.beforePrice2 = beforePrice2;
     }
+
+    @Basic
+    @Column(name = "operator_id", length = 4)
+    public Integer getOperatorId(){ return operatorId; }
+
+    public void setOperatorId(Integer operator_id){ this.operatorId = operator_id; }
 
     @Override
     public boolean equals(Object o) {

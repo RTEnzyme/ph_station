@@ -17,7 +17,6 @@
     <script type="text/javascript" src="/js/jquery-ui.min.js" ></script>
     <style type="text/css">
         .layui-table-cell {
-            /*height: auto !important;*/
             white-space: normal;
             height: 60px;
             text-align:center;
@@ -32,9 +31,6 @@
             /* 防止水平滚动条 */
             overflow-x: hidden;
         }
-        /* IE 6 不支持 max-height
-         * 我们使用 height 代替，但是这会强制菜单总是显示为那个高度
-         */
         * html .ui-autocomplete {
             height: 100px;
         }
@@ -46,103 +42,78 @@
         <b>待标注KOL列表</b>
     </li>
     <li class="layui-nav-item layui-col-md-offset6">
+        <a id="duration">累计标注${labeled_count}个</a>
+    </li>
+    <li class="layui-nav-item">
+        <a id="today">今日标注${todayCount}个</a>
+    </li>
+    <li class="layui-nav-item">
+        <a>被修改${update_count}个</a>
+    </li>
+    <li class="layui-nav-item" style="float: right">
         <a href="">${username}</a>
         <dl class="layui-nav-child">
             <dd><a href="/password.html">修改密码</a></dd>
             <dd><a href="/logout">退出</a></dd>
         </dl>
     </li>
-    <li class="layui-nav-item">
-        <a>累计标注${labeled_count}个</a>
-    </li>
-    <li class="layui-nav-item">
-        <a>今日标注${todayCount}个</a>
-    </li>
-    <li class="layui-nav-item">
-        <a>被修改${update_count}个</a>
-    </li>
 </ul>
 <div class="container">
-    <div class="layui-row layui-col-space15">
-
-
-
-        <div class="layui-col-md12">
-            <div class="layui-card">
-
-                <div class="layui-card-body">
-<!--                    <div class="layui-col-md12">-->
-<!--                        <p><b>待标注KOL列表</b> <p align="right"> 累计标注${labeled_count}个&nbsp 今日标注${todayCount}个 &nbsp被修改${update_count}个</p></p>-->
-<!--                    </div>-->
-<!--                    <div class="layui-card">-->
-                        <div class="demoTable" style="text-align: right">
-<!--                            <select name="city" onchange="getSelectValue(this);">-->
-<!--                                <option value="name">用户名</option>-->
-<!--                                <option value="id">抖音号</option>>-->
-<!--                            </select>-->
-                            <div class="layui-inline">
-                                <input class="layui-input" name="productId" id="send_name" autocomplete="off" placeholder="请输入用户名/抖音号">
-                            </div>
-                            <button class="layui-btn layui-bg-cyan" data-type="reload" id="do_search">搜索</button>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12" style="float: top">
+                    <div class="demoTable" style="text-align: right">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="send_name" id="send_name"  placeholder="请输入用户名/抖音号">
                         </div>
-<!--                    </div>-->
-<!--                    <br/>-->
-                        <br>
+                        <button class="layui-btn layui-bg-cyan" data-type="reload" id="do_search">搜索</button>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
                     <table id="demo" lay-filter="test"></table>
                 </div>
             </div>
         </div>
-
     </div>
+</div>
 
     <script>
-        window.onload=function(){
+        $(function(){
             let auto_data = [];
             $.ajax({
                 url: "/autocomplete",
                 type : "post",
                 dataType : "json",
-                // data: {
-                //     companynm : $("#companyid").val()
-                // },
                 success: function( data ) {
-                       // console.log(data);
-                    for (let i in data['data']) {
-                        auto_data.push(data['data'][i]); //属性
-                        //arr.push(object[i]); //值
+                    for (let i of data['data']) {
+                        auto_data.push(i); //将返回的关键词加入到数组中
                     }
-                }});
-            $("#send_name").autocomplete({
-                source: auto_data
-                ,minLength: 2
+                    $("#send_name").autocomplete({
+                        source: auto_data
+                        ,minLength: 2
 
-            });
-        }
-        // var sValue = 'name';
-        // function getSelectValue(obj) {
-        //     sValue = obj.options[obj.options.selectedIndex].value; //这是取值
-        //     // var sText = obj.options[obj.options.selectedIndex].innerHTML; //这是取文本内容
-        //     // document.getElementById("selectValue").innerHTML = sText + "，他的值为：" + sValue; //测试输出
-        // };
+                    });
+                }});
+        });
+        var today_count = parseInt('${todayCount}');
+        var duration_count = parseInt('${labeled_count}');
         layui.use(['table','upload'], function(){
             var table = layui.table;
-            //第一个实例
-
             table.render({
                 id:'test'
                 ,elem: '#demo'
                 ,page: 'true'
                 ,height: 818
                 ,url: '/brandList'
-                // ,page: true //开启分页
                 ,title: 'KOL列表'
-                // ,toolbar: '#toolbarDemo'  //开启头部工具栏，并为其绑定左侧模板
                 ,cols: [[
                     {field: 'AvatarUrl', title: '头像', align: 'center',width:80, templet: '#imgTemp',align:'center'}
                     ,{field: 'kol_name', title: '名称', width:100,align:'center'}
-                    ,{field: 'douyinId', title: '抖音号', width:100,align:'center'}
+                    ,{field: 'douyinId', title: '抖音号', width:120,align:'center'}
                     ,{field: 'StarLabel', title: '星图标签', width: 70,align:'center'}
                     ,{field: 'price', title: '星图价格', width: 90,align:'center', templet:function(d){
+                            //规格化数值，例：654321 -》 ￥654,321
                             var priceStr = d.price.split(",");
                             var price = "";
                             if (priceStr.length >1) {
@@ -150,11 +121,12 @@
                                 let priceAfter2 = priceAfter.toLocaleString();
                                 price = "¥"+priceAfter2} else {price = ""}
                             return price}}
-                    ,{field: 'Label1', title: '标签1', width: 80, hide: 'true'}
-                    ,{field: 'Label2', title: '标签2', width: 80, hide: 'true'}
-                    ,{field: 'Label3', title: '标签3', width: 80, hide: 'true'}
+                    ,{field: 'Label1', title: '标签1', hide: 'true'}
+                    ,{field: 'Label2', title: '标签2', hide: 'true'}
+                    ,{field: 'Label3', title: '标签3', hide: 'true'}
                     ,{field: 'label', title: '标签', width: 200,align:'center'}
                     ,{field: 'beforePriceShow', title: '合作价格', width: 90,align:'center', templet:function(d){
+                            //同上
                             let priceStr = d.beforePriceShow;
                             let price = "";
                             if (priceStr.length >1) {
@@ -166,14 +138,11 @@
                     ,{field: 'beforePrice', hide: 'true'}
                     ,{field: 'CooperateDegree', title: '配合度', width: 70,align:'center'}
                     ,{field: 'LastLabelId', title: '标注人', width: 80,align:'center'}
-                    // beforePrice2 Label1 Label2 Label3 LastLabelId  CooperateDegree
-                    // {field: 'SelectLabel1', title: '标签1', width: 110, event:'cols'}
                 ]]
                 ,done: function(res,curr,count){
                     $('td').css({'cursor':'pointer'}); //设置成指针放在表格上换成手指,水平垂直居中
                     $('table').width('100%');
-                    $('.layui-table-cell').css({ 'line-height':'60px', 'text-align':'center'});
-                    // $('th').css({'height':'40px'})
+                    $('.layui-table-cell').css({ 'line-height':'60px', 'text-align':'center','padding': '0px 0px'});
                 }
             });
             // 执行搜索，表格重载
@@ -181,73 +150,29 @@
                     // 搜索条件
                     let send_name = $('#send_name').val();
                     console.log(send_name);
-                    // let select = $('#select').val();
-                    // // var send_data = $('#send_data').val();
-                    // if(sValue === 'name'){
-                    // table.reload('test', {
-                    //     method: 'post'
-                    //     , where: {
-                    //         // 'csrfmiddlewaretoken': token,
-                    //         'kol_name': send_name,
-                    //         // 'send_data': send_data,
-                    //     }
-                    //     , page: {
-                    //         curr: 1
-                    //     }
-                    // },'data')}
-                    // else if(sValue === 'id'){
                         table.reload('test', {
                             method: 'post'
-                            , where: {
-                                // 'csrfmiddlewaretoken': token,
-                                // 'kol_name': "",
-                                'douyinId': send_name
-                                // 'send_data': send_data,
-                            }
-                            , page: {
-                                curr: 1
-                            }
+                            , where: {'douyinId': send_name}
+                            , page: {curr: 1}
                         },'data')
-                    // }
-
                 }
             );
             table.on('row(test)',function(obj){
-                // obj.stylesheet = 'color:red';
                 if ([[${todayCount}]] <=200) {
                     var data = obj.data;
                     layer.open({
                         type: 2
-                        ,
-                        title: '修改信息'
-                        ,
-                        content: 'form.html?' + data.Label1 + '&' + data.Label2 + '&' + data.Label3 + '&' + data.CooperateDegree + '&' + data.kol_name
-                        // ,
-                        // height: 600
-                        // ,maxmin: true
-                        ,
-                        area: ['400px', '380px']
-                        ,
-                        btn: ['确定', '取消']
-                        ,
-                        yes: function (index, layero) {
+                        , title: '修改信息'
+                        , content: 'form.html?' + data.Label1 + '&' + data.Label2 + '&' + data.Label3 + '&' + data.CooperateDegree + '&' + data.kol_name
+                        , area: ['400px', '390px']
+                        , btn: ['确定', '取消']
+                        , yes: function (index, layero) {
                             let before_price_form = $(layero).find('iframe')[0].contentWindow.before_price.value;
-                            // let url = $(layero).find('iframe')[0].contentWindow.before_price_2.value;
-                            // console.log(before_price_form);
                             let CooperateDegree_form = $(layero).find('iframe')[0].contentWindow.CooperateDegree.value;
                             let label1_form = $(layero).find('iframe')[0].contentWindow.label1.value;
                             let label2_form = $(layero).find('iframe')[0].contentWindow.label2.value;
                             let label3_form = $(layero).find('iframe')[0].contentWindow.label3.value;
                             let labelStr = '';
-                            // let priceStr = before_price_form;
-                            // let price = "";
-                            // if (priceStr.length >1) {
-                            //     let priceAfter = parseInt(priceStr)
-                            //     let priceAfter2 = priceAfter.toLocaleString();
-                            //     // console.log(priceAfter2);
-                            //     price = priceAfter2;
-                            //     console.log(price);
-                            // } else {price = ""}
                             if(label1_form.length !== 0){
                                 labelStr+=label1_form;
                             }
@@ -258,19 +183,15 @@
                                 labelStr+='，'+label3_form;
                             }
                             //同步数据表格中的数据
-                            // console.log(config_name);
-                            // console.log(url);
                             obj.update({
                                 beforePrice: before_price_form
-                                // ,beforePrice2: url
                                 , CooperateDegree: CooperateDegree_form
+                                , beforePriceShow: before_price_form
+                                , label: labelStr
                                 , Label1: label1_form
                                 , Label2: label2_form
                                 , Label3: label3_form
-                                , beforePriceShow: before_price_form
                             })
-                            // console.log(data.kol_name)
-
                             $.ajax({
                                 url: '/update_user/',
                                 type: "post",
@@ -282,44 +203,25 @@
                                     , Label1: label1_form
                                     , Label2: label2_form
                                     , Label3: label3_form
-                                    , label: labelStr
+                                    , LastLabelId: data.LastLabelId
+                                    , page: $(".layui-laypage-em").next().html()//当前页码值
                                 },
                                 success(data) {
-                                    // layer.msg('KOL标注成功');
-
-                                    layer.msg('KOL标注成功', {icon: 1, time: 1000}, function () {
-                                        // setTimeout('window.location.reload()', 1000);
-                                        // table.reload()
-                                    });
-
+                                    if(parseInt(data.status) === 1){
+                                        today_count+=1;
+                                        document.getElementById("today").innerHTML = '今日标注'+today_count+'个';
+                                        duration_count+=1;
+                                        document.getElementById("duration").innerHTML = '累计标注'+duration_count+'个';
+                                    }
+                                    layer.msg('KOL标注成功', {icon: 1, time: 1000});
                                 }
                             })
                             layer.close(index);
                         }
                         ,
                         success: function (layero, index) {
-
-                            // 方式一  其实就是获取的 子页面的 div
-                            var div = layero.find('iframe').contents().find('#useradmin');  // div.html() div里面的内容,不包含当前这个div
-
-                            // 方式二
                             var body = layer.getChildFrame('body', index);  // body.html() body里面的内容
-
-
-                            /* ---- 附加内容 看看就好  Begin ---- */
-                            var iframeWindow = window['layui-layer-iframe' + index]   // 方式一： 得到iframe页的窗口对象
-                            // var iframeWindow = window[layero.find('iframe')[0]['name']];   // 方式二： 得到iframe页的窗口对象
-                            /* ---- 附加内容 看看就好  End ---- */
-
-                            // 测试 ：
-                            body.find("#before_price").val(data.beforePrice);  // 方式一
-                            // body.find("#before_price_2").val(data.beforePrice2)
-                            body.find("#CooperateDegree").val(data.CooperateDegree)
-                            // console.log(data.Label1);
-                            body.find("#label1").val(data.Label1);
-                            body.find("#label2").val(data.Label2);
-                            body.find("#label3").val(data.Label3);
-                            // div.find("#username").val("admin");  // 方式二
+                            body.find("#before_price").val(data.beforePrice);
                         }
                     });
                 }
@@ -332,26 +234,26 @@
                     });
                 }
             })
+            table.reload('test', {
+                page: {
+                    curr: '${page}' //从第 几 页重新开始
+                }
+            }); //只重载数据
         });
 
     </script>
 
     <script type="text/html" id="imgTemp">
-<!--        <div class="layadmin-homepage-pad-ver">-->
         <img class="layadmin-homepage-pad-img" src="{{d.AvatarUrl}}" width="50" height="50">
-<!--        </div>-->
-        <!--    <img src="{{d.avator_url}}" style="height: 60px;width: 60px">-->
     </script>
 
     <script>
         //注意：导航 依赖 element 模块，否则无法进行功能性操作
         layui.use('element', function(){
             var element = layui.element;
-
-            //…
         });
     </script>
 
-</div>
+
 </body>
 </html>
