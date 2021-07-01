@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>设备详细信息</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../static/layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../static/layuiadmin/style/admin.css" media="all">
+    <style>
+        #container {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+  
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md8">
+        <div class="layui-row layui-col-space2">
+
+            <div class="layui-card">
+              <div class="layui-card-header">水动力数据数据概览</div>
+              <div class="layui-card-body">
+
+                <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
+                  <div carousel-item id="LAY-index-dataview">
+                    <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <div class="layui-card">
+              <div class="layui-card-header">设备位置:</div>
+              <div class="layui-card-body">
+
+                <div id="container" class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
+
+                </div>
+
+              </div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="layui-col-md4">
+
+        
+{#        <div class="layui-card">#}
+{#          <div class="layui-card-header">行驶报告</div>#}
+{#          <div class="layui-card-body layadmin-takerates">#}
+{#            <div class="layui-progress" lay-showPercent="yes">#}
+{#              <h3>行程（日同比 28% <span class="layui-edge layui-edge-top" lay-tips="增长" lay-offset="-15"></span>）</h3>#}
+{#              <div class="layui-progress-bar" lay-percent="65%"></div>#}
+{#            </div>#}
+{#            <div class="layui-progress" lay-showPercent="yes">#}
+{#              <h3>签到率（日同比 11% <span class="layui-edge layui-edge-bottom" lay-tips="下降" lay-offset="-15"></span>）</h3>#}
+{#              <div class="layui-progress-bar" lay-percent="32%"></div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+        
+        <div class="layui-card">
+          <div class="layui-card-header">实时监控</div>
+          <div class="layui-card-body layadmin-takerates">
+            <div class="layui-progress" lay-showPercent="yes">
+              <h3>电量</h3>
+              <div class="layui-progress-bar layui-bg-red" lay-percent="58%"></div>
+            </div>
+            <div class="layui-progress" lay-showPercent="yes">
+              <h3>采样</h3>
+              <div class="layui-progress-bar" lay-percent="90%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="layui-card">
+          <div class="layui-card-header"></div>
+          <div class="layui-card-body">
+            <div class="layui-carousel layadmin-carousel layadmin-news" data-autoplay="true" data-anim="fade" lay-filter="news">
+              <div carousel-item>
+                <div><button style="height: 100%;width: 100%" class="layui-bg-red" id="baojing" onclick="warning()">设备开关</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      
+    </div>
+  </div>
+
+  <script src="../static/layuiadmin/layui/layui.js?t=1"></script>
+  <script>
+  layui.config({
+    base: '../static/layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'console']);
+  </script>
+<script src="//a.amap.com/Loca/static/mock/districts.js"></script>
+<script src="https://webapi.amap.com/loader.js"></script>
+<script src="/static/js/boundary.js"></script>
+<script>
+    AMapLoader.load({ //首次调用 load
+        key:'80a268740e748a7b26879e8e7009dd9e',//首次load key为必填
+        version:'2.0',
+      	AMapUI: {
+            version: '1.1',
+            plugins:['overlay/SimpleMarker']
+        }
+    }).then((AMap)=>{
+        map = new AMap.Map('container',{
+            zoom: 15,  //zoom是指地图的初始放大倍数
+            center:[118.730886, 32.075067]
+        });
+        var layer1 = new AMap.TileLayer.Satellite();
+        var layer2 =  new AMap.TileLayer.RoadNet();
+        var layers = [
+            layer1,
+            layer2
+        ]
+
+        map.add(layers);
+        var marker = new AMap.Marker({
+        map: map,
+        position: [118.730886, 32.075067]
+        });
+        // createBoundary(AMap,map);
+        //鼠标点击marker弹出自定义的信息窗体
+        //marker.on('click', function () {
+        //    infoWindow.open(map, marker.getPosition());
+        //});
+        map.setStatus({
+            dragEnable: false
+        });
+
+
+        //实例化信息窗体
+    var title = '方恒假日酒店<span style="font-size:11px;color:#F00;">价格:318</span>',
+        content = [];
+    content.push("<img src='http://tpc.googlesyndication.com/simgad/5843493769827749134'>地址：北京市朝阳区阜通东大街6号院3号楼东北8.3公里");
+    content.push("电话：010-64733333");
+    content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>");
+    var infoWindow = new AMap.InfoWindow({
+        isCustom: true,  //使用自定义窗体
+        content: createInfoWindow(title, content.join("<br/>")),
+        offset: new AMap.Pixel(16, -45)
+    });
+
+    //构建自定义信息窗体
+    function createInfoWindow(title, content) {
+        var info = document.createElement("div");
+        info.className = "custom-info input-card content-window-card";
+
+        //可以通过下面的方式修改自定义窗体的宽高
+        //info.style.width = "400px";
+        // 定义顶部标题
+        var top = document.createElement("div");
+        var titleD = document.createElement("div");
+        var closeX = document.createElement("img");
+        top.className = "info-top";
+        titleD.innerHTML = title;
+        closeX.src = "https://webapi.amap.com/images/close2.gif";
+        closeX.onclick = closeInfoWindow;
+
+        top.appendChild(titleD);
+        top.appendChild(closeX);
+        info.appendChild(top);
+
+        // 定义中部内容
+        var middle = document.createElement("div");
+        middle.className = "info-middle";
+        middle.style.backgroundColor = 'white';
+        middle.innerHTML = content;
+        info.appendChild(middle);
+
+        // 定义底部内容
+        var bottom = document.createElement("div");
+        bottom.className = "info-bottom";
+        bottom.style.position = 'relative';
+        bottom.style.top = '0px';
+        bottom.style.margin = '0 auto';
+        var sharp = document.createElement("img");
+        sharp.src = "https://webapi.amap.com/images/sharp.png";
+        bottom.appendChild(sharp);
+        info.appendChild(bottom);
+        return info;
+    }
+
+    //关闭信息窗体
+    function closeInfoWindow() {
+        map.clearInfoWindow();
+    }
+    });
+
+
+    function warning(){
+        layer.open({
+          title: '提示'
+          ,content: '设备开始工作！'
+        });
+    }
+
+</script>
+</body>
+</html>
+

@@ -1,0 +1,22 @@
+{
+  "code": 0,
+  "message": "",
+  "count": 3,
+  "data": [
+    {
+      "device_id": "2sa3dw53",
+      "device_name": "设备1",
+      "is_used": "正在使用"
+    },
+    {
+      "device_id": "2314asfg6",
+      "device_name": "设备2",
+      "is_used": "未使用"
+    },
+    {
+      "device_id": "23a1sd5df",
+      "device_name": "设备3",
+      "is_used": "正在使用"
+    }
+  ]
+}

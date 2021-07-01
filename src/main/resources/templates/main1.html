@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/infoWindow.css">
+    <title>水质采样后台管理系统</title>
+    <style>
+        html, body, #container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+
+    </style>
+    <style type="text/css">
+        #panel {
+            position: fixed;
+            background-color: white;
+            max-height: 90%;
+            overflow-y: auto;
+            top: 40px;
+            right: 10px;
+            width: 280px;
+        }
+        #panel .amap-call {
+            background-color: #009cf9;
+            border-top-left-radius: 4px;
+   	        border-top-right-radius: 4px;
+        }
+        #panel .amap-lib-driving {
+	        border-bottom-left-radius: 4px;
+   	        border-bottom-right-radius: 4px;
+            overflow: hidden;
+        }
+        #searchPanel {
+            position: fixed;
+            background-color: white;
+            overflow-y: auto;
+            z-index: 2;
+            top: 40px;
+            left: 10px;
+            width: 130px;
+            height: 190px;
+        }
+         .amap-icon img {
+            width: 15px;
+            height: 30px;
+        }
+
+        .amap-marker-label{
+            border: 0;
+            background-color: transparent;
+        }
+
+        .info{
+            width: 10px;
+            position: relative;
+            margin:0;
+            top: 0;
+            right: 0;
+            min-width: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="searchPanel" >
+    <div class="layui-card">
+        <div class="layui-card-header">设备筛选</div>
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <input type="checkbox" value="toilet" title="准备中" lay-skin="primary" lay-filter="firstCheckbox">
+                <input type="checkbox" value="P" title="收集中" lay-skin="primary" lay-filter="firstCheckbox">
+                <input type="checkbox" value="restauent" title="待回收" lay-skin="primary" lay-filter="firstCheckbox">
+                <input type="checkbox" value="exit" title="已检测" lay-skin="primary" lay-filter="firstCheckbox">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="container" tabindex="0"></div>
+<div id="panel"></div>
+    <div class='input-card' style="width:40rem;height: 20rem">
+        <div class="layui-tab">
+  <ul class="layui-tab-title">
+      <li class="layui-this">设备搜索</li>
+{#      <li>设备</li>#}
+{#      <li>自选路径</li>#}
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">设备搜索</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required lay-verify="required" placeholder="请输入设备号" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+                        <button class="layui-btm" lay-submit lay-filter="removeDemo">清除搜索结果</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+//注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+layui.use('element', function(){
+  var element = layui.element;
+
+  //…
+});
+
+</script>
+    </div>
+<script src="/js/Dashboard.js"></script>
+<script src="/js/location_marker.js"></script>
+<script src="http://a.amap.com/Loca/static/mock/districts.js"></script>
+<script src="https://webapi.amap.com/loader.js"></script>
+<script src="/js/boundary.js"></script>
+<script src="/js/infoWindow.js"></script>
+<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+<script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+<script src="/js/recommendPath.js"></script>
+<script src="/js/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script src="/js/setMarker.js"></script>
+<script>
+    AMapLoader.load({ //首次调用 load
+        key:'80a268740e748a7b26879e8e7009dd9e',//首次load key为必填
+        version:'2.0',
+        plugins: ['AMap.Driving','AMap.Walking','AMap.Riding','AMap.PlaceSearch','AMap.AutoComplete'],
+      	AMapUI: {
+            version: '1.1',
+            plugins:['overlay/SimpleMarker']
+        }
+    }).then((AMap)=> {
+
+        map = new AMap.Map('container', {
+            zoom: 16,  //zoom是指地图的初始放大倍数
+            center: [118.730886, 32.075067]
+        });
+
+        var layer1 = new AMap.TileLayer.Satellite();
+        var layer2 = new AMap.TileLayer.RoadNet();
+        var layers = [
+            layer1,
+            layer2
+        ]
+
+        map.add(layers);
+
+        // createBoundary(AMap, map);
+        // setMarker(AMap, map);
+         //创建右键菜单
+        var contextMenu = new AMap.ContextMenu();
+          //右键添加Marker标记
+        contextMenu.addItem("添加设备", function (e) {
+            var marker = new AMap.Marker({
+                map: map,
+                position: contextMenuPositon //基点位置
+            });
+        }, 3);
+
+        contextMenu.addItem("到这里",function(e){
+            walking.clear();
+            riding_search(contextMenuPositon.lng,contextMenuPositon.lat);
+        })
+
+        //地图绑定鼠标右击事件——弹出右键菜单
+        map.on('rightclick', function (e) {
+            contextMenu.open(map, e.lnglat);
+            msg = 'AMap.LngLat('+e.lnglat.lng+","+e.lnglat.lat+"),";
+            console.log(msg);
+            contextMenuPositon = e.lnglat;
+        });
+
+        contextMenu.open(map);
+
+
+        map.setStatus({
+            dragEnable: true
+        });
+
+       var walking=new AMap.Riding({
+            map:map,
+            panel:"panel"
+  });
+
+        var placeSearch = new AMap.PlaceSearch({
+            pageSize: 5, // 单页显示结果条数
+            pageIndex: 1, // 页码
+            city: "南京", // 兴趣点城市
+            citylimit: true,  //是否强制限制在设置的城市内搜索
+            map: map, // 展现结果的地图实例
+            panel: "panel", // 结果列表将在此容器中进行展示。
+            autoFitView: true // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
+        });
+
+        var cpoint = [118.730886, 32.075067]; //中心点坐标
+        function select(name) {
+            placeSearch.searchNearBy(name, cpoint, 600, function(status, result) {});
+        }
+        function removeSearch(){
+            placeSearch.searchNearBy('', cpoint, 600, function(status, result){});
+        }
+        //生成功能框
+        layui.use('form', function(){
+            var form = layui.form;
+          //监听提交
+          form.on('submit(formDemo)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            select(data.field.title)
+            return false;
+          });
+          form.on('submit(removeDemo)',function(data){
+              removeSearch();
+          });
+          form.on('checkbox(firstCheckbox)', function(data){
+              // console.log(data.elem); //得到checkbox原始DOM对象
+              // console.log(data.elem.checked); //是否被选中，true或者false
+              // console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+              // console.log(data.othis); //得到美化后的DOM对象
+              if(data.value==='toilet'){
+                  if(data.elem.checked){
+                      add_marker(map,AMap,toiletList);
+                  }
+              }
+              if(data.value==='P'){
+                  if(data.elem.checked){
+                      add_marker(map,AMap,pList);
+                  }
+              }
+              if(data.value==='restauent'){
+                  if(data.elem.checked){
+                      add_marker(map,AMap,resList);
+                  }
+              }
+              if(data.value==='exit'){
+                  if(data.elem.checked){
+                      add_marker(map,AMap,exitList);
+                  }
+              }
+           });
+           form.on('checkbox(location)', function(data){
+              console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+           });
+        });
+
+        var toiletList = [];
+        var pList = [];
+        var resList = [];
+        var exitList = [];
+        var startIcon = new AMap.Icon({
+            // 图标尺寸
+            size: new AMap.Size(330, 40),
+            // 图标的取图地址
+            image: '/static/images/厕所.png',
+            // 图标所用图片大小
+            imageSize: new AMap.Size(40, 50),
+            // 图标取图偏移量
+            imageOffset: new AMap.Pixel(-9, -3)
+        });
+         tilet1 = new AMap.Marker({
+            position: new AMap.LngLat(118.729309,32.075949),
+            offset: new AMap.Pixel(-10, -10),
+            // icon: startIcon, // 添加 Icon 图标 URL
+            title: '准备中',
+        });
+         toiletList.push(tilet1);
+         tilet2 = new AMap.Marker({
+            position: new AMap.LngLat(118.729888,32.076912),
+            offset: new AMap.Pixel(-10, -10),
+            // icon: startIcon, // 添加 Icon 图标 URL
+            title: '准备中',
+        });
+         toiletList.push(tilet2);
+         tilet3 = new AMap.Marker({
+            position: new AMap.LngLat(118.72991,32.077876),
+            offset: new AMap.Pixel(-10, -10),
+            // icon: startIcon, // 添加 Icon 图标 URL
+            title: '准备中',
+            });
+         toiletList.push(tilet3);
+        P1 = new AMap.Marker({
+            position: new AMap.LngLat(118.729781,32.079294),
+            // offset: new AMap.Pixel(-10, -10),
+            // icon: PIcon, // 添加 Icon 图标 URL
+            title: '收集中',
+        });
+         pList.push(P1);
+         P2 = new AMap.Marker({
+            position: new AMap.LngLat(118.723708,32.076985),
+            // offset: new AMap.Pixel(-10, -10),
+            // icon: PIcon, // 添加 Icon 图标 URL
+            title: '收集中',
+        });
+         pList.push(P2);
+         res1 = new AMap.Marker({
+            position: new AMap.LngLat(118.722142,32.074385),
+            // offset: new AMap.Pixel(-10, -10),
+            // icon: resIcon, // 添加 Icon 图标 URL
+            title: '待回收',
+        });
+         resList.push(res1);
+         exit1 = new AMap.Marker({
+            position: new AMap.LngLat(118.721026,32.071858),
+            // offset: new AMap.Pixel(-10, -10),
+            // icon: exitIcon, // 添加 Icon 图标 URL
+            title: '已检测',
+        });
+         exitList.push(exit1);
+         exit2 = new AMap.Marker({
+            position: new AMap.LngLat(118.72609,32.07053),
+            // offset: new AMap.Pixel(-10, -10),
+            // icon: exitIcon, // 添加 Icon 图标 URL
+            title: '已检测',
+        });
+         exitList.push(exit2);
+        });
+</script>
+    </div>
+</body>
+
+</html>
+<script>
+
+
+</script>

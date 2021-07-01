@@ -1,0 +1,49 @@
+{
+  "code": 0,
+  "message": "",
+  "count": 6,
+  "data": [
+    {
+      "device_id": "2e5as84",
+      "status": "准备中",
+      "update_time": "2021-4-25 17:30",
+      "location": "(118.7303286, 32.0758627)",
+      "leader": "赵某"
+    },
+    {
+      "device_id": "5was2851x",
+      "status": "收集中",
+      "update_time": "2021-4-15 16:30",
+      "location": "(118.7365456, 32.056467)",
+      "leader": "赵某"
+    },
+    {
+      "device_id": "2e5as84",
+      "status": "收集中",
+      "update_time": "2021-4-16 17:30",
+      "location": "(118.730886, 32.075067)",
+      "leader": "赵某"
+    },
+    {
+      "device_id": "23sa585s2",
+      "status": "待回收",
+      "update_time": "2021-4-18 17:30",
+      "location": "(118.732186, 32.070237)",
+      "leader": "赵某"
+    },
+    {
+      "device_id": "5asd64aw2",
+      "status": "待回收",
+      "update_time": "2021-4-19 17:30",
+      "location": "(118.7308561, 32.032067)",
+      "leader": "赵某"
+    },
+    {
+      "device_id": "2as21d32as",
+      "status": "已回收",
+      "update_time": "2021-4-11 17:30",
+      "location": "(118.730856, 32.0323067)",
+      "leader": "赵某"
+    }
+  ]
+}

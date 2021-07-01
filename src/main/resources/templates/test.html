@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>位置经纬度 + 驾车规划路线</title>
+    <style type="text/css">
+    html,
+    body,
+    #container {
+      width: 100%;
+      height: 100%;
+    }
+    </style>
+    <style type="text/css">
+        #panel {
+            position: fixed;
+            background-color: white;
+            max-height: 90%;
+            overflow-y: auto;
+            top: 10px;
+            right: 10px;
+            width: 280px;
+        }
+        #panel .amap-call {
+            background-color: #009cf9;
+            border-top-left-radius: 4px;
+   	        border-top-right-radius: 4px;
+        }
+        #panel .amap-lib-driving {
+	        border-bottom-left-radius: 4px;
+   	        border-bottom-right-radius: 4px;
+            overflow: hidden;
+        }
+    </style>
+    <style type="text/css">
+        #searchPanel {
+            position: fixed;
+            background-color: white;
+            max-height: 90%;
+            overflow-y: auto;
+            top: 10px;
+            right: 10px;
+            width: 280px;
+            border-bottom: solid 1px silver;
+        }
+    </style>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+</head>
+<body>
+<div id="container"></div>
+<div id="panel"></div>
+{#<div id="searchPanel"></div>#}
+<div id="searchPanel">
+    <table>
+        <tr>
+            <td>
+                <label>请输入关键字：</label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="tipinput"/>
+            </td>
+        </tr>
+    </table>
+</div>
+<script src="//a.amap.com/Loca/static/mock/districts.js"></script>
+<script src="https://webapi.amap.com/loader.js"></script>
+<script src="/static/js/boundary.js"></script>
+<script type="text/javascript">
+    //基本地图加载
+    AMapLoader.load({ //首次调用 load
+        key:'80a268740e748a7b26879e8e7009dd9e',//首次load key为必填
+        version:'2.0',
+        plugins:['AMap.Driving','AMap.Walking','AMap.Riding','AMap.PlaceSearch','AMap.AutoComplete'],
+      	AMapUI: {
+            version: '1.1',
+            plugins:['overlay/SimpleMarker']
+        }
+    }).then((AMap)=> {
+        var map = new AMap.Map("container", {
+            resizeEnable: true,
+            center: [118.799685, 32.0949818],//地图中心点
+            zoom: 13 //地图显示的缩放级别
+        });
+        //构造路线导航类
+         var layer1 = new AMap.TileLayer.Satellite();
+        var layer2 = new AMap.TileLayer.RoadNet();
+        var layers = [
+            layer1,
+            layer2
+        ]
+        //createBoundary(AMap,map)
+
+        map.add(layers);
+        //步行导航
+        walking = new AMap.Riding({
+            map: map,
+            panel: "panel"
+        }); 
+        // 根据起终点经纬度规划驾车导航路线
+        walking.search(new AMap.LngLat(118.799685, 32.0949818), new AMap.LngLat(118.801415, 32.092879), function (status, result) {
+            // result 即是对应的驾车导航信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
+            if (status === 'complete') {
+                log.success('绘制驾车路线完成')
+            } else {
+                log.error('获取驾车数据失败：' + result)
+            }
+        });
+        var autoOptions = {
+        input: "tipinput"
+        };
+        var auto = new AMap.AutoComplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+
+            pageSize: 5, // 单页显示结果条数
+            pageIndex: 1, // 页码
+            city: "南京", // 兴趣点城市
+            citylimit: true,  //是否强制限制在设置的城市内搜索
+            map: map, // 展现结果的地图实例
+            panel: "panel", // 结果列表将在此容器中进行展示。
+            autoFitView: true // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
+        });
+
+        var cpoint = [118.802983, 32.091963]; //中心点坐标
+
+
+        auto.on("select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.searchNearBy(e.poi.name, cpoint, 600, function(status, result) {
+
+        });
+        }
+    })
+</script>
+</body>
+</html>

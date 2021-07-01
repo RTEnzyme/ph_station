@@ -1,0 +1,171 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>表单元素</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../static/layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../static/layuiadmin/style/admin.css" media="all">
+</head>
+
+<div class="layui-fluid">
+    <div class="layui-tab layui-tab-card">
+        <ul class="layui-tab-title">
+            <li class="layui-this">智能推荐</li>
+            <li>自己设计</li>
+        </ul>
+        <div class="layui-tab-content" style="height: 100px;">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-card">
+                    <div class="layui-card-header">游览路线个性化设计</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="" lay-filter="component-form-element">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-col-lg6">
+                                    <label class="layui-form-label">姓名：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="fullname" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-col-lg6">
+                                    <label class="layui-form-label">参观人群类别：</label>
+                                    <div class="layui-input-block">
+                                        <select name="type" lay-verify="required" lay-filter="aihao">
+                                            <option value=""></option>
+                                            <option value="0">独自参观</option>
+                                            <option value="1">父母+小孩</option>
+                                            <option value="2">家庭+老人</option>
+                                            <option value="3">家庭+老人+小孩</option>
+                                            <option value="4">情侣</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">想参观的景点：</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="xiongmao"  title="熊猫馆" checked lay-filter="location">
+                                        <input type="checkbox" name="kepu" title="科普廊" lay-filter="location">
+                                        <input type="checkbox" name="huhou" title="狐猴岛" lay-filter="location">
+                                        <input type="checkbox" name="redainiao" title="热带鸟馆" lay-filter="location">
+                                        <input type="checkbox" name="chongwuleyuan" title="宠物乐园" lay-filter="location">
+                                        <input type="checkbox" name="shihu" title="狮虎山" lay-filter="location">
+                                        <input type="checkbox" name="langgu" title="狼谷" lay-filter="location">
+                                        <input type="checkbox" name="zhuangguan" title="大壮观阁" lay-filter="location">
+                                        <input type="checkbox" name="sheli" title="猞猁馆" lay-filter="location">
+                                        <input type="checkbox" name="daxiang" title="大象馆" lay-filter="location">
+                                        <input type="checkbox" name="changjinglu" title="长颈鹿馆" lay-filter="location">
+                                        <input type="checkbox" name="xingxing" title="猩猩馆" lay-filter="location">
+                                        <input type="checkbox" name="banma" title="斑马馆" lay-filter="location">
+                                        <input type="checkbox" name="qie" title="企鹅馆" lay-filter="location">
+                                        <input type="checkbox" name="houshan" title="猴山" lay-filter="location">
+                                        <input type="checkbox" name="xiwei" title="细尾獴馆" lay-filter="location">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否需要中途饮食：</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="marriage" lay-skin="switch" lay-text="是|否">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">参观时长：</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="role" value="" title="1">
+                                    <input type="radio" name="role" value="" title="3">
+                                    <input type="radio" name="role" value="" title="5" checked>
+                                    <input type="radio" name="role" value="" title="7">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">其它信息：</label>
+                                <div class="layui-input-block">
+                                    <textarea name="other" placeholder="" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"> </label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="agreement" title="同意" lay-skin="primary" checked>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="component-form-element">立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-card">
+                    <div class="layui-card-header">游览路线个性化设计</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="" lay-filter="component-form-element">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">想参观的景点：</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="xiongmao"  title="熊猫馆" checked lay-filter="location">
+                                    <input type="checkbox" name="kepu" title="科普廊" lay-filter="location">
+                                    <input type="checkbox" name="huhou" title="狐猴岛" lay-filter="location">
+                                    <input type="checkbox" name="redainiao" title="热带鸟馆" lay-filter="location">
+                                    <input type="checkbox" name="chongwuleyuan" title="宠物乐园" lay-filter="location">
+                                    <input type="checkbox" name="shihu" title="狮虎山" lay-filter="location">
+                                    <input type="checkbox" name="langgu" title="狼谷" lay-filter="location">
+                                    <input type="checkbox" name="zhuangguan" title="大壮观阁" lay-filter="location">
+                                    <input type="checkbox" name="sheli" title="猞猁馆" lay-filter="location">
+                                    <input type="checkbox" name="daxiang" title="大象馆" lay-filter="location">
+                                    <input type="checkbox" name="changjinglu" title="长颈鹿馆" lay-filter="location">
+                                    <input type="checkbox" name="xingxing" title="猩猩馆" lay-filter="location">
+                                    <input type="checkbox" name="banma" title="斑马馆" lay-filter="location">
+                                    <input type="checkbox" name="qie" title="企鹅馆" lay-filter="location">
+                                    <input type="checkbox" name="houshan" title="猴山" lay-filter="location">
+                                    <input type="checkbox" name="xiwei" title="细尾獴馆" lay-filter="location">
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn" lay-submit lay-filter="component-form-element">立即提交</button>
+                                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <script src="../static/layuiadmin/layui/layui.js"></script>
+            <script>
+                layui.config({
+                    base: '../static/layuiadmin/' //静态资源所在路径
+                }).extend({
+                    index: 'lib/index' //主入口模块
+                }).use(['index', 'form'], function(){
+                    var $ = layui.$
+                        ,admin = layui.admin
+                        ,element = layui.element
+                        ,form = layui.form;
+
+                    form.render(null, 'component-form-element');
+                    element.render('breadcrumb', 'breadcrumb');
+
+                    form.on('submit(component-form-element)', function(data){
+                        layer.open({
+                            title: '生成码'
+                            ,content: '25W4A4d1c'
+                        });
+                        return false;
+                    });
+                });
+            </script>
+</html>
