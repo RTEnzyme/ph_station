@@ -1,4 +1,4 @@
-package com.lemon.admin.RT_Enzyme.controller;
+package com.lemon.chen.RT_Enzyme.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

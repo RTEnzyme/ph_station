@@ -1,4 +1,4 @@
-package com.lemon.admin.RT_Enzyme.entity;
+package com.lemon.chen.RT_Enzyme.entity;
 
 
 import lombok.Data;

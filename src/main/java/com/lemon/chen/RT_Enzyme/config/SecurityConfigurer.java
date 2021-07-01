@@ -1,6 +1,6 @@
-package com.lemon.admin.RT_Enzyme.config;
+package com.lemon.chen.RT_Enzyme.config;
 
-import com.lemon.admin.RT_Enzyme.service.AuthorifyService;
+import com.lemon.chen.RT_Enzyme.service.AuthorifyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 //  @Autowired
 //  PasswordEncoder passwordEncoder;
   @Autowired
-  AuthorifyService authorifyService;
+AuthorifyService authorifyService;
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -50,7 +50,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         .formLogin()
         .loginPage("/login")
         .loginProcessingUrl("/authentication/form")//登录请求url-form表单的action
-        .defaultSuccessUrl("/main/page",true)
+        .defaultSuccessUrl("/url/index",true)
         .failureForwardUrl("/login.html?error")
         .permitAll()
         .and()

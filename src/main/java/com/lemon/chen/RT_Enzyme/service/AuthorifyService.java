@@ -1,8 +1,8 @@
-package com.lemon.admin.RT_Enzyme.service;
+package com.lemon.chen.RT_Enzyme.service;
 
 
-import com.lemon.admin.RT_Enzyme.dao.UserInfoMapper;
-import com.lemon.admin.RT_Enzyme.entity.UserInfo;
+import com.lemon.chen.RT_Enzyme.dao.UserInfoMapper;
+import com.lemon.chen.RT_Enzyme.entity.UserInfo;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,10 +37,7 @@ public class AuthorifyService implements UserDetailsService {
     }
     public List<SimpleGrantedAuthority> getAuthority(/*List<UserRole> roles*/) {
         List<SimpleGrantedAuthority> list = new ArrayList<>();
-//        for (UserRole role : roles) {
-//            list.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
         list.add(new SimpleGrantedAuthority("ROLE_" + "Admin"));
-//        }
         return list;
     }
 }

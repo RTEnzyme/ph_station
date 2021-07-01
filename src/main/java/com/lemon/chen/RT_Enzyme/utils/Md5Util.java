@@ -1,5 +1,6 @@
-package com.lemon.admin.RT_Enzyme.utils;
+package com.lemon.chen.RT_Enzyme.utils;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.DigestUtils;
 
 /**
@@ -21,6 +22,11 @@ public class Md5Util {
     public static String stringToMd5(String str) {
         String base = SALT + str + SALT;
         return DigestUtils.md5DigestAsHex(base.getBytes());
+    }
+
+    private static final BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+    public static String encodePassword(String password){
+        return bCryptPasswordEncoder.encode(password);
     }
 
 }

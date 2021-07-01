@@ -1,4 +1,4 @@
-package com.lemon.admin.RT_Enzyme.dao;
+package com.lemon.chen.RT_Enzyme.dao;
 
 
 import org.apache.ibatis.annotations.Mapper;

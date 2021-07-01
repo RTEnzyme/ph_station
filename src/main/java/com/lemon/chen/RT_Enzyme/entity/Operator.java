@@ -1,4 +1,4 @@
-package com.lemon.admin.RT_Enzyme.entity;
+package com.lemon.chen.RT_Enzyme.entity;
 
 import javax.persistence.*;
 import java.util.Objects;
