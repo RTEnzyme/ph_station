@@ -1,8 +1,6 @@
-package com.lemon.admin.cofjus.config;
+package com.lemon.admin.RT_Enzyme.config;
 
-import com.lemon.admin.cofjus.entity.Operator;
-import com.lemon.admin.cofjus.repositories.OperatorRepository;
-import com.lemon.admin.cofjus.service.CustomUserDetailsService;
+import com.lemon.admin.RT_Enzyme.service.AuthorifyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,16 +27,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 //  @Autowired
 //  PasswordEncoder passwordEncoder;
   @Autowired
-  CustomUserDetailsService userDetailsService;
-
-  @Autowired
-  OperatorRepository operatorRepository;
+  AuthorifyService authorifyService;
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
     // 加入自定义的安全认证
-    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    auth.userDetailsService(authorifyService).passwordEncoder(passwordEncoder());
   }
 
   @Override
@@ -55,7 +50,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         .formLogin()
         .loginPage("/login")
         .loginProcessingUrl("/authentication/form")//登录请求url-form表单的action
-        .defaultSuccessUrl("/index",true)
+        .defaultSuccessUrl("/main/page",true)
         .failureForwardUrl("/login.html?error")
         .permitAll()
         .and()
@@ -64,7 +59,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         .and()
         .csrf()
         .disable()
-
             .headers()
             .frameOptions().sameOrigin()
             .httpStrictTransportSecurity().disable();;

@@ -1,4 +1,4 @@
-package com.lemon.admin.cofjus.utils;
+package com.lemon.admin.RT_Enzyme.utils;
 
 import org.springframework.util.DigestUtils;
 
@@ -11,7 +11,7 @@ import org.springframework.util.DigestUtils;
 public class Md5Util {
 
     /** 加盐 */
-    private final static String SALT = "578ca82ec19d9a635d93f799d0bd23bc";
+    private final static String SALT = "8ba65fce-d26f-41b9-b1b6-542b6f1482a8";
 
     /**
      * 生成md5

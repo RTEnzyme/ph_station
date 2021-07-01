@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @date  2020/6/22
  */
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = {"com.lemon.admin.cofjus.repositories"})
+@EnableJpaRepositories(basePackages = {"com.lemon.admin.RT_Enzyme.repositories"})
 @EnableScheduling
 public class BigdatasysApplication {
     public static void main(String[] args) {
