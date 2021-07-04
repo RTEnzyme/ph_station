@@ -13,7 +13,7 @@ public class RoleService {
 
     public String mainPageByRole(String user_name){
         UserInfo usr = userInfoMapper.findUserInfoByUserName(user_name);
-        if (usr.getRoleId() == 1) return "index_super_admin.html";
+        if (usr.getRoleId() == 1) return "index_admin.html";
         else if (usr.getRoleId() == 2) return "index_admin.html";
         else return "index.html";
     }

@@ -1,6 +1,8 @@
 package com.lemon.chen.RT_Enzyme.dao;
 
+import com.lemon.chen.RT_Enzyme.dao.Dto.UserRegisterDto;
 import com.lemon.chen.RT_Enzyme.entity.UserInfo;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -9,7 +11,7 @@ import org.apache.ibatis.annotations.Update;
 public interface UserInfoMapper {
 
     @Select(
-            "select * from user_info where user_name = #{userName}"
+            "select user_id as userId, user_name as userName, password, role_id as roleId from user_info where user_name = #{userName}"
     )
     UserInfo findUserInfoByUserName(String userName);
 
@@ -22,4 +24,19 @@ public interface UserInfoMapper {
             "select * from user_info where user_id = #{user_id}"
     )
     UserInfo findUserByUserId(Integer user_id);
+
+    @Select(
+            "select max(user_id) from user_info"
+    )
+    Integer getLatestUserId();
+
+    @Insert(
+            "INSERT user_info VALUES(#{userId}, #{userName}, 3, #{password}, #{email}, #{phoneNumber})"
+    )
+    Integer insertNormalUserInfo(UserRegisterDto userRegisterDto);
+
+    @Insert(
+            "INSERT user_proj_rel VALUES(#{project}, #{userId}, now())"
+    )
+    Integer insertUserProjRel(UserRegisterDto userRegisterDto);
 }

@@ -1,6 +1,7 @@
 package com.lemon.chen.RT_Enzyme.service;
 
 import com.lemon.chen.RT_Enzyme.dao.ProjInfoMapper;
+import com.lemon.chen.RT_Enzyme.entity.ProjInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,5 +21,7 @@ public class ProjectInfoService {
     public LinkedHashMap<String, Object> getProjInfoByProjId(Integer projId){
         return projInfoMapper.getProjectInfoByProjId(projId);
     }
+
+    public Integer getProjForUser(Integer uid) { return projInfoMapper.getProjListByUid(uid).get(0).getProjId(); }
 
 }

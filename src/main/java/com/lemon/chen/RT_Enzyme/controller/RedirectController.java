@@ -2,7 +2,10 @@ package com.lemon.chen.RT_Enzyme.controller;
 
 import com.lemon.chen.RT_Enzyme.service.ProjectInfoService;
 import com.lemon.chen.RT_Enzyme.service.RoleService;
+import com.lemon.chen.RT_Enzyme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,11 +27,17 @@ public class RedirectController {
     @Autowired
     ProjectInfoService projectInfoService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("/index")
     public ModelAndView mainPage(){
+        // 通过SpringSecurty获取用户名
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User usr = (User)principal;
         ModelAndView mv = new ModelAndView();
-        mv.addObject("uid", 1);
-        mv.setViewName("index_admin.html");
+        mv.addObject("uid", userService.findUserIdByUsername(usr.getUsername()));
+        mv.setViewName(roleService.mainPageByRole(usr.getUsername()));
         return mv;
     }
 
@@ -55,6 +64,18 @@ public class RedirectController {
         LinkedHashMap<String, Object> info = projectInfoService.getProjInfoByProjId(proj_id);
         ModelAndView mv = new ModelAndView();
         mv.addObject("proj_id", proj_id);
+        mv.addAllObjects(info);
+        mv.setViewName("/console.html");
+        return mv;
+    }
+
+    @GetMapping("/{uid}/project")
+    public ModelAndView projectPageForUser(@PathVariable Integer uid){
+        // 获取用户关联的proj_id
+        Integer projId = projectInfoService.getProjForUser(uid);
+        LinkedHashMap<String, Object> info = projectInfoService.getProjInfoByProjId(projId);
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("uid", uid);
         mv.addAllObjects(info);
         mv.setViewName("/console.html");
         return mv;

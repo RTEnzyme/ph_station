@@ -67,7 +67,7 @@
               <dd><a lay-href="set/user/info.html">基本资料</a></dd>
               <dd><a lay-href="set/user/password.html">修改密码</a></dd>
               <hr>
-              <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
+              <dd lay-href="/logout" style="text-align: center;"><a>退出</a></dd>
             </dl>
           </li>
         </ul>
@@ -88,13 +88,7 @@
               </a>
               <dl class="layui-nav-child">
                 <dd data-name="console" class="layui-this">
-                  <a lay-href="/main1.html">数据概览</a>
-                </dd>
-                <dd data-name="console">
-                  <a lay-href="/dataCollection.html">项目数据</a>
-                </dd>
-                <dd data-name="console">
-                  <a lay-href="/deviceData.html">项目管理</a>
+                  <a lay-href="/console">数据概览</a>
                 </dd>
               </dl>
             </li>
@@ -129,7 +123,7 @@
       <!-- 主体内容 -->
       <div class="layui-body" id="LAY_app_body">
         <div class="layadmin-tabsbody-item layui-show">
-          <iframe src="/url/main/${uid}" frameborder="0" class="layadmin-iframe"></iframe>
+          <iframe src="/url/${uid}/project" frameborder="0" class="layadmin-iframe"></iframe>
         </div>
       </div>
       
