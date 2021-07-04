@@ -1,5 +1,6 @@
 package com.lemon.chen.RT_Enzyme.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lemon.chen.RT_Enzyme.dao.Dto.LocationDto;
 import com.lemon.chen.RT_Enzyme.entity.ProjInfo;
 import com.lemon.chen.RT_Enzyme.service.MainPageService;
@@ -17,14 +18,18 @@ public class MainController {
 
 
 
-    @GetMapping("/locations/{proj_id}/list")
-    public List<LocationDto> locations_list(@PathVariable("proj_id")Integer proj_id){
-        return mainPageService.locations_list(proj_id);
+    @GetMapping("/locations/{uid}/list")
+    public JSONObject locations_list(@PathVariable("uid")Integer uid){
+        JSONObject json = new JSONObject();
+        json.put("data",  mainPageService.locations_list(uid));
+        return json;
     }
 
     @GetMapping("/project/{uid}/info")
-    public List<ProjInfo> projInfoList(@PathVariable("uid")Integer uid){
-        return mainPageService.projInfoList(uid);
+    public JSONObject projInfoList(@PathVariable("uid")Integer uid){
+        JSONObject json = new JSONObject();
+        json.put("data", mainPageService.projInfoList(uid));
+        return json;
     }
 
 }

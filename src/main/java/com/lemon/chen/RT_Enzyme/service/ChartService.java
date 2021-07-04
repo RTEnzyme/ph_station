@@ -1,16 +1,18 @@
 package com.lemon.chen.RT_Enzyme.service;
 
-import com.lemon.chen.RT_Enzyme.dao.Dto.LocationDto;
+
+import com.alibaba.fastjson.JSONArray;
+import com.lemon.chen.RT_Enzyme.dao.Dto.ChartV1Dto;
 import com.lemon.chen.RT_Enzyme.dao.LocationInfoMapper;
 import com.lemon.chen.RT_Enzyme.dao.ProjInfoMapper;
-import com.lemon.chen.RT_Enzyme.entity.ProjInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
-public class MainPageService {
+public class ChartService {
 
     @Resource
     LocationInfoMapper locationInfoMapper;
@@ -18,11 +20,9 @@ public class MainPageService {
     @Resource
     ProjInfoMapper projInfoMapper;
 
-    public List<LocationDto> locations_list(Integer uid){
-        return locationInfoMapper.getLocationInfosByProjId(uid);
+    public List<ChartV1Dto> chartInfo(Integer uid){
+        return locationInfoMapper.getchartInfoByUid(uid);
     }
 
-    public List<ProjInfo> projInfoList(Integer uid){
-        return projInfoMapper.getProjListByUid(uid);
-    }
+    public List<LinkedHashMap<String, Object>> tableInfo(Integer uid) { return projInfoMapper.getTableInfoByUid(uid);}
 }

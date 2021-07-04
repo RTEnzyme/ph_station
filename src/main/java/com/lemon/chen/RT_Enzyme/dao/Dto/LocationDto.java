@@ -7,7 +7,7 @@ public class LocationDto {
 
     Float latitude;
 
-    Float longtitude;
+    Float longitude;
 
     String projName;
 

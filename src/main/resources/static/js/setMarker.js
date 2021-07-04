@@ -1,35 +1,26 @@
-function setMarker(AMap,map){
-    markerLocation = [
-         new AMap.LngLat(118.80053,32.093344),//
-         new AMap.LngLat(118.80053,32.093344),
-         new AMap.LngLat(118.800123,32.09298),
-         new AMap.LngLat(118.800507,32.091797),
-         new AMap.LngLat(118.800922,32.091647),
-         new AMap.LngLat(118.802141,32.09157),
-         new AMap.LngLat(118.80274,32.092457),
-         new AMap.LngLat(118.803946,32.093363),
-         new AMap.LngLat(118.805668,32.093238),
-         new AMap.LngLat(118.804857,32.091113),
-         new AMap.LngLat(118.803264,32.090516),
-        new AMap.LngLat(118.804325,32.08869),
-         new AMap.LngLat(118.805508,32.08906),
-         new AMap.LngLat(118.801174,32.091259),
-         new AMap.LngLat(118.803403,32.091478),
-         new AMap.LngLat(118.802051,32.091094)
-    ];
-    markerContent = [
-        "南京熊猫馆","科普廊","狐猴馆","热带鸟馆","宠物园","狮虎馆","狼谷","壮观阁","猞猁馆","大象馆","长颈鹿馆","猩猩馆","斑马馆","企鹅馆","猴山","细尾獴馆"
-    ];
+function setMarker(AMap,map, uid){
+    var locationList;
+    $.ajax({
+        type: 'get',
+        url: '/locations/'+uid+'/list',
+        contentType: "applicatoin/json; charset=utf-8",
+        async: false,
+        success: function (result){
+            console.log(result);
+            locationList = result.data;
+        }
+    })
+    let markerLists = [], markerContents = [];
+    console.log(locationList);
+    for (item in locationList){
+        let data = locationList[item];
+        markerLists.push(new AMap.LngLat(data.longitude, data.latitude));
+        markerContents.push(data.projName);
+    }
     infoList = [];
-    for (item in markerContent){
-        var title = markerContent[item]+'<span style="font-size:11px;color:#ff0000;">开放中</span>'
-        var img = "<img src='/static/images/redmountain.png' style='height: 200px;width: 200px'>";
-        if(markerContent[item]==="大象馆"){
-            img = "<img src='/static/images/daxiang.png' style='height: 200px;width: 200px'>";
-        }
-        if(markerContent[item]==="猩猩馆"){
-            img = "<img src='/static/images/xingxing.png' style='height: 200px;width: 200px'>";
-        }
+    for (item in markerContents){
+        var title = markerContents[item]+'<span style="font-size:11px;color:#ff0000;">运行中</span>'
+        var img = "<img src='/images/光电站.png' style='height: 200px;width: 200px'>";
         content = [];
         content.push(img);
         content.push("电话：010-64733333");
@@ -42,9 +33,9 @@ function setMarker(AMap,map){
         infoList.push(infoWindow2);
     }
     let markerList = [];
-    for (let item in markerLocation) {
+    for (let item in markerLists) {
         marker = new AMap.Marker({
-            position: markerLocation[item],
+            position: markerLists[item],
             icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
             anchor: 'bottom-center',
             offset: new AMap.Pixel(0, 0)
@@ -53,14 +44,10 @@ function setMarker(AMap,map){
         marker.setMap(map);
 
         // 设置鼠标划过点标记显示的文字提示
-        marker.setTitle(markerContent[item]);
+        marker.setTitle(markerContents[item]);
         markerList.push(marker);
-        // 设置label标签
-        // label默认蓝框白底左上角显示，样式className为：amap-marker-label
-        //实例化信息窗体
-
     }
-    for(let item in markerContent){
+    for(let item in markerContents){
         markerList[item].on('click', function () {
             infoList[item].open(map, markerList[item].getPosition());
         });

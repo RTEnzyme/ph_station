@@ -72,10 +72,10 @@
         <div class="layui-card-header">设备筛选</div>
         <div class="layui-card-body">
             <form class="layui-form" action="">
-                <input type="checkbox" value="toilet" title="准备中" lay-skin="primary" lay-filter="firstCheckbox">
-                <input type="checkbox" value="P" title="收集中" lay-skin="primary" lay-filter="firstCheckbox">
-                <input type="checkbox" value="restauent" title="待回收" lay-skin="primary" lay-filter="firstCheckbox">
-                <input type="checkbox" value="exit" title="已检测" lay-skin="primary" lay-filter="firstCheckbox">
+                <input type="checkbox" value="toilet" title="运行中" lay-skin="primary" lay-filter="firstCheckbox">
+                <input type="checkbox" value="P" title="整顿中" lay-skin="primary" lay-filter="firstCheckbox">
+                <input type="checkbox" value="restauent" title="建设中" lay-skin="primary" lay-filter="firstCheckbox">
+                <input type="checkbox" value="exit" title="规划中" lay-skin="primary" lay-filter="firstCheckbox">
             </form>
         </div>
     </div>
@@ -145,7 +145,7 @@ layui.use('element', function(){
     }).then((AMap)=> {
 
         map = new AMap.Map('container', {
-            zoom: 16,  //zoom是指地图的初始放大倍数
+            zoom: 4,  //zoom是指地图的初始放大倍数
             center: [118.730886, 32.075067]
         });
 
@@ -159,7 +159,7 @@ layui.use('element', function(){
         map.add(layers);
 
         // createBoundary(AMap, map);
-        // setMarker(AMap, map);
+        setMarker(AMap, map, '${uid}');
          //创建右键菜单
         var contextMenu = new AMap.ContextMenu();
           //右键添加Marker标记

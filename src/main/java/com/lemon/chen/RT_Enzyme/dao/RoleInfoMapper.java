@@ -10,4 +10,5 @@ public interface RoleInfoMapper {
             "select role_code from role_info where role_id = 1"
     )
     String testMapper();
+
 }

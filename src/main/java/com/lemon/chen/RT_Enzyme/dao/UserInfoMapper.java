@@ -17,4 +17,9 @@ public interface UserInfoMapper {
             "update user_info set password=#{password} where user_name = #{userName}"
     )
     Integer updatePasswordByUserName(String userName, String password);
+
+    @Select(
+            "select * from user_info where user_id = #{user_id}"
+    )
+    UserInfo findUserByUserId(Integer user_id);
 }
