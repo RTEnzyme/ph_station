@@ -12,7 +12,7 @@ import java.util.List;
 
 @Controller
 @ResponseBody
-public class MainController {
+public class ProjectController {
     @Autowired
     MainPageService mainPageService;
 

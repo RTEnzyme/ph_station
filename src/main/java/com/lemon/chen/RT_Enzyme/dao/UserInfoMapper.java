@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
 @Mapper
 public interface UserInfoMapper {
 
@@ -39,4 +42,15 @@ public interface UserInfoMapper {
             "INSERT user_proj_rel VALUES(#{project}, #{userId}, now())"
     )
     Integer insertUserProjRel(UserRegisterDto userRegisterDto);
+
+    @Select(
+            "SELECT\n" +
+            "    user_id as userId,\n" +
+            "    user_name as userName\n" +
+            "FROM\n" +
+            "    user_info\n" +
+            "WHERE\n" +
+            "        user_info.role_id = 1"
+    )
+    List<LinkedHashMap<String, Object>> getAdminList();
 }

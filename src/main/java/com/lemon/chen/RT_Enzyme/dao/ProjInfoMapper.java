@@ -1,5 +1,6 @@
 package com.lemon.chen.RT_Enzyme.dao;
 
+import com.lemon.chen.RT_Enzyme.dao.Dto.TransDto;
 import com.lemon.chen.RT_Enzyme.entity.ProjInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -71,4 +72,23 @@ public interface ProjInfoMapper {
             "        proj_id = #{projId}"
     )
     LinkedHashMap<String, Object> getProjectInfoByProjId(Integer projId);
+
+    @Select(
+            "SELECT\n" +
+            "    proj_id as value,\n" +
+            "    proj_name as title\n" +
+            "FROM\n" +
+            "    proj_info\n"
+    )
+    List<TransDto> adminProjList();
+
+    @Select(
+            "SELECT\n" +
+            "   proj_id\n" +
+            "FROM\n" +
+            "   user_proj_rel\n" +
+            "WHERE\n" +
+            "   user_proj_rel.user_id = #{uid}"
+    )
+    List<String> authedProjList(Integer uid);
 }

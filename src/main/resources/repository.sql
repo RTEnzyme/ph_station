@@ -51,3 +51,24 @@ FROM
     JOIN proj_info ON user_proj_rel.proj_id = proj_info.proj_id
 WHERE
     user_proj_rel.user_id = 1
+
+
+SELECT
+    user_id as userId,
+    user_name as userName
+FROM
+    user_info
+WHERE
+        user_info.role_id = 1
+
+
+
+SELECT
+    proj_id as value,
+	proj_name as title
+FROM
+    user_info
+    JOIN user_proj_rel ON user_info.user_id = user_proj_rel.user_id
+    JOIN proj_info ON proj_info.proj_id = user_proj_rel.proj_id
+WHERE
+    user_info.user_id = 1

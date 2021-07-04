@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>项目分配</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+
+</head>
+<body>
+<hr>
+<hr>
+<hr>
+<div class="layui-card">
+  <div class="layui-card-header">项目权限分配</div>
+  <div class="layui-card-body">
+    <div class="layui-tab" lay-filter="demo">
+      <ul class="layui-tab-title" id = "tab_main">
+<!--        <li class="layui-this">网站设置</li>-->
+      </ul>
+      <div class="layui-tab-content" id = "tab_page">
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/layui/layui.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script>
+    function getAdminList(){
+      $.ajax({
+        url: '/admin/list',
+        sync: true,
+        success:function(res){
+          let projs = res.data;
+          $("#tab_main").append("<li data-status="+projs[0].userId+" class=\"layui-this\"\>"+projs[0].userName+"</li>");
+          $("#tab_page").append("<div class=\"layui-tab-item layui-show\">"+"<dev id='trans"+projs[0].userId+"'></dev>"+"</div>")
+          for(let i =1;i<projs.length;i++){
+            $("#tab_main").append("<li data-status="+projs[i].userId+"\>"+projs[i].userName+"</li>");
+            $("#tab_page").append("<div class=\"layui-tab-item\">"+"<dev id='trans"+projs[i].userId+"'></dev>"+"</div>")
+          }
+          //重新渲染
+          layui.element.render("tab");
+          $.ajax({
+              url: '/admin/'+projs[0].userId+'/project/list',
+              contentType: "apllication/json",
+              dataType: "json",
+              type: "GET",
+              success:function(res){
+                  let data = res.data;
+                  layui.transfer.render({
+                      elem: "#trans"+projs[0].userId  //绑定元素
+                      ,data: data
+                      ,title: ['未授权项目', '已授权项目']
+                      ,value: res.auth
+                      ,id: 'demo1' //定义索引
+                  });
+              }
+          })
+
+        }
+      });
+    };
+    layui.use(['element', 'transfer'], function(){
+      var element = layui.element;
+      var transfer = layui.transfer;
+      getAdminList();
+      //一些事件触发
+      element.on('tab(demo)', function(data){
+        console.log(data);
+        var status = $(this).attr('data-status');
+        var postion = '#trans'+status;
+        getTransList(postion);
+      });
+
+      function getTransList(postion) {
+          $.ajax({
+              url: '/admin/' + postion.substring(6) + '/project/list',
+              contentType: "apllication/json",
+              dataType: "json",
+              type: "GET",
+              success:function(res) {
+                  transfer.render({
+                      elem: postion  //绑定元素
+                      , data: res.data
+                      , title: ['未授权项目', '已授权项目']
+                      , width: 500
+                      , value: res.auth
+                      , id: 'demo1' //定义索引
+                  });
+              }
+      });}
+    });
+  </script>
+</body>
+</html>

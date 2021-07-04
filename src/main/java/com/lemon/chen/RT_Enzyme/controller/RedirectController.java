@@ -88,4 +88,11 @@ public class RedirectController {
         mv.setViewName("create_user.html");
         return mv;
     }
+
+    @GetMapping("/project/admin")
+    public ModelAndView projectAdmin(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("project_distribute.html");
+        return mv;
+    }
 }
