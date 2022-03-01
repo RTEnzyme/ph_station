@@ -10,9 +10,9 @@ spring:
     static-locations: classpath:/static/,classpath:/templates/,classpath:/static/img/,classpath:/static/css/,classpath:/static/js/
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rm-uf6fjj89fa3s9ai2wso.mysql.rds.aliyuncs.com/ph_st?useSSL=false&useUnicode=true&characterEncoding=utf8 #47数据库新建schema的Url
+    url: XXX #47数据库新建schema的Url
     username: test1 #47mysql username
-    password:  Ali123456 #47mysql password
+    password:  XXXX #47mysql password
     type: com.alibaba.druid.pool.DruidDataSource
 beetl:
   suffix: html
